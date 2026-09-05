@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Salute Risponde API
  * Description: Chat sanitaria e analisi informativa di documenti per Salute Risponde.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Salute Risponde
  */
 
@@ -29,7 +29,8 @@ add_action('rest_api_init', function () {
             return new WP_REST_Response([
                 'success' => true,
                 'service' => 'Salute Risponde API',
-                'version' => '1.2.0',
+                'version' => '1.2.1',
+                'ai_configured' => salute_risponde_get_api_key() !== '',
                 'chat'    => true,
                 'vision'  => true,
             ], 200);
@@ -41,6 +42,10 @@ add_action('rest_api_init', function () {
 function salute_risponde_get_api_key() {
     $names = [
         'SALUTE_RISPONDE_OPENAI_API_KEY',
+        // Compatibility with existing server configuration; never expose values.
+        'SALUTE_CHIARA_OPENAI_API_KEY',
+        'KINGO_MEDICO_OPENAI_API_KEY',
+        'KINGO_OPENAI_API_KEY',
         'OPENAI_API_KEY',
     ];
 
