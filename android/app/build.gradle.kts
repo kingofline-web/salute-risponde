@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.kingo_medico"
+    namespace = "it.saluterisponde.app"
     compileSdk = 36
 
     compileOptions {
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.kingo_medico"
+        applicationId = "it.saluterisponde.app"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
         versionCode = flutter.versionCode

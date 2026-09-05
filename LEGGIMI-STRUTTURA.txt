@@ -1,28 +1,18 @@
-KINGO MEDICO - STRUTTURA FLUTTER COMPLETA
+SALUTE RISPONDE - STRUTTURA FLUTTER COMPLETA
 
-Questo pacchetto integra il repository con TUTTI i file strutturali Flutter/Android
-che mancavano dopo il Pacchetto Funzionale 1.
+Progetto Android/Flutter unificato per l’app sanitaria Salute Risponde.
 
-CARICA TUTTO IL CONTENUTO DI QUESTA CARTELLA NEL REPOSITORY ESISTENTE.
+Identificativo Android definitivo:
+it.saluterisponde.app
 
-Contiene:
-- android/settings.gradle.kts
-- android/build.gradle.kts
-- android/gradle.properties
-- android/gradlew
-- android/gradlew.bat
-- android/gradle/wrapper/gradle-wrapper.properties
-- MainActivity.kt
-- manifest debug/profile
-- risorse Android, stili e icone launcher
-- .metadata
-- .gitignore
-- analysis_options.yaml
-- test/widget_test.dart
+Struttura principale:
+- lib/main.dart
+- lib/services/
+- assets/branding/
+- android/
+- server/salute-risponde-api.php
 
-NOTA TECNICA:
-android/gradlew è predisposto per scaricare automaticamente Gradle 8.12.1
-durante la build Codemagic. Non serve caricare manualmente gradle-wrapper.jar.
+Versione base unificata: 1.3.0+7
 
-Dopo questo upload il repository contiene la struttura necessaria per lanciare
-la build Flutter Android.
+La build Android usa Gradle 8.12.1. Il progetto include fotocamera,
+archivio documenti, analisi AI, agenda, promemoria farmaci e chat sanitaria.

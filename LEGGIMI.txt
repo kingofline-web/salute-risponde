@@ -1,30 +1,27 @@
-KINGO MEDICO - PACCHETTO FUNZIONALE 1
+SALUTE RISPONDE - BASE UNIFICATA 1.3.0
 
-FILE DA SOSTITUIRE/CARICARE NEL REPOSITORY:
-- pubspec.yaml
-- lib/main.dart
-- lib/services/app_storage_service.dart
-- lib/services/medical_ai_service.dart
-- lib/services/notification_service.dart
-- android/app/src/main/AndroidManifest.xml
-- android/app/build.gradle.kts
-- android/app/src/main/res/raw/kingo_medicine.wav
+FUNZIONI PRESENTI
+1. Chat sanitaria collegata all’API WordPress.
+2. Tre risposte gratuite memorizzate sul dispositivo; il conteggio server
+   verrà collegato insieme ad account e pagamenti.
+3. Fotocamera e selezione di immagini o PDF.
+4. Archivio locale dei documenti sanitari.
+5. Analisi AI delle immagini con consenso esplicito.
+6. Agenda visite con promemoria.
+7. Promemoria farmaci modificabili con suono dedicato.
+8. Numeri utili e contatti sanitari personali.
+9. Schermate piani e account predisposte.
 
-FILE SERVER WORDPRESS:
-- server/kingo-medico-api.php
+CONFIGURAZIONE SERVER
+- Plugin: server/salute-risponde-api.php
+- Rotta chat: /wp-json/salute-risponde/v1/chat
+- Rotta documenti: /wp-json/salute-risponde/v1/analyze-document
+- Stato: /wp-json/salute-risponde/v1/status
+- Chiave server: SALUTE_RISPONDE_OPENAI_API_KEY oppure OPENAI_API_KEY
 
-COSA SISTEMA:
-1. Agenda: niente dialog/controller crash; salvataggio persistente.
-2. Agenda: avviso programmato il giorno prima alle 09:00.
-3. Farmaci: salvataggio persistente + notifica giornaliera.
-4. Farmaci: suono dedicato kingo_medicine.wav.
-5. Referti: selezione + pulsante SALVA + archivio sul dispositivo.
-6. Numeri utili: numeri cliccabili che aprono il dialer.
-7. Piani: pulsanti di scelta visibili; Billing reale resta da collegare.
-8. Account: schermate ACCEDI/ISCRIVITI predisposte; backend utenti resta da collegare.
-9. Chat: endpoint app corretto; plugin WordPress incluso per creare la rotta REST.
-
-NOTA:
-- L'autenticazione vera e Google Play Billing non sono simulati: vanno collegati nel modulo successivo.
-- Il plugin WordPress richiede che sul server sia definita la costante o variabile
-  KINGO_MEDICO_OPENAI_API_KEY.
+ANCORA DA COLLEGARE
+- Registrazione e accesso reali.
+- Conteggio delle tre domande sul server.
+- Google Play Billing.
+- Passi, calorie ed esercizi per il benessere e la terza età.
+- Firma release Android definitiva.

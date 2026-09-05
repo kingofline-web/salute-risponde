@@ -45,7 +45,7 @@ class NotificationService {
       tz.TZDateTime.from(reminder, tz.local),
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'kingo_visits',
+          'salute_risponde_visits',
           'Visite e appuntamenti',
           channelDescription: 'Promemoria delle visite programmate',
           importance: Importance.high,
@@ -82,13 +82,13 @@ class NotificationService {
       scheduled,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'kingo_medicines',
+          'salute_risponde_medicines',
           'Promemoria farmaci',
           channelDescription: 'Avvisi giornalieri per i farmaci',
           importance: Importance.max,
           priority: Priority.high,
           playSound: true,
-          sound: RawResourceAndroidNotificationSound('kingo_medicine'),
+          sound: RawResourceAndroidNotificationSound('salute_risponde_medicine'),
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

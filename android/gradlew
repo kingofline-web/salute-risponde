@@ -3,7 +3,7 @@ set -e
 
 GRADLE_VERSION="8.14.3"
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-CACHE_DIR="${HOME}/.kingo-gradle"
+CACHE_DIR="${HOME}/.salute-risponde-gradle"
 GRADLE_HOME="${CACHE_DIR}/gradle-${GRADLE_VERSION}"
 ZIP_FILE="${CACHE_DIR}/gradle-${GRADLE_VERSION}-bin.zip"
 

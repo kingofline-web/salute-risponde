@@ -5,10 +5,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppStorageService {
-  static const _appointmentsKey = 'kingo_medico_appointments';
-  static const _medicinesKey = 'kingo_medico_medicines';
-  static const _documentsKey = 'kingo_medico_documents';
-  static const _selectedPlanKey = 'kingo_medico_selected_plan';
+  static const _appointmentsKey = 'salute_risponde_appointments';
+  static const _medicinesKey = 'salute_risponde_medicines';
+  static const _documentsKey = 'salute_risponde_documents';
+  static const _selectedPlanKey = 'salute_risponde_selected_plan';
 
   Future<List<Map<String, dynamic>>> loadAppointments() async {
     return _loadList(_appointmentsKey);

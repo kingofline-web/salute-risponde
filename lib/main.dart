@@ -1,8 +1,9 @@
-// KINGO MEDICO RC1.2.2 FIX DEFINITIVO OVERFLOW + ICONA K UOMO
+// SALUTE RISPONDE RC1.3.0 - BASE UNIFICATA
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,17 +11,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'services/app_storage_service.dart';
+import 'services/document_ai_service.dart';
 import 'services/medical_ai_service.dart';
 import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.instance.initialize();
-  runApp(const KingoMedicoApp());
+  runApp(const SaluteRispondeApp());
 }
 
-class KingoMedicoApp extends StatelessWidget {
-  const KingoMedicoApp({super.key});
+class SaluteRispondeApp extends StatelessWidget {
+  const SaluteRispondeApp({super.key});
 
   static const navy = Color(0xFF0D2B45);
   static const primary = Color(0xFF0E4D5A);
@@ -42,7 +44,7 @@ class KingoMedicoApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'KINGO Medico',
+      title: 'Salute Risponde',
       locale: const Locale('it', 'IT'),
       supportedLocales: const [Locale('it', 'IT')],
       localizationsDelegates: const [
@@ -123,7 +125,7 @@ class HomePage extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Modalità TESTER KOL'),
+        title: const Text('Modalità collaudo'),
         content: const Text(
           'Attivare la modalità di collaudo interna con risposte illimitate?',
         ),
@@ -143,10 +145,10 @@ class HomePage extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     await storage.setSelectedPlan('TESTER');
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('kingo_medico_free_answers_used', 0);
+    await prefs.setInt('salute_risponde_free_answers_used', 0);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('TESTER KOL attivo: risposte illimitate.')),
+      const SnackBar(content: Text('Modalità collaudo attiva: risposte illimitate.')),
     );
   }
 
@@ -161,11 +163,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onLongPress: () => _activateTester(context),
-                  child: Image.asset(
-                    'assets/branding/kingo_medico_logo.png',
-                    width: 205,
-                    fit: BoxFit.contain,
-                  ),
+                  child: const _BrandWordmark(),
                 ),
                 const Spacer(),
                 IconButton.filledTonal(
@@ -179,7 +177,7 @@ class HomePage extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [KingoMedicoApp.navy, KingoMedicoApp.primary],
+                  colors: [SaluteRispondeApp.navy, SaluteRispondeApp.primary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -225,7 +223,7 @@ class HomePage extends StatelessWidget {
                                 _open(context, const MedicalChatPage()),
                             style: FilledButton.styleFrom(
                               backgroundColor: Colors.white,
-                              foregroundColor: KingoMedicoApp.navy,
+                              foregroundColor: SaluteRispondeApp.navy,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 18,
                                 vertical: 16,
@@ -233,7 +231,7 @@ class HomePage extends StatelessWidget {
                             ),
                             icon: const Icon(Icons.chat_bubble_outline_rounded),
                             label: const Text(
-                              'Parla con KINGO',
+                              'Fai una domanda',
                               style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                           ),
@@ -241,37 +239,52 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Stack(
-                    children: [
-                      Image.asset(
-                        'assets/branding/kingo_doctor.png',
-                        width: double.infinity,
-                        height: 175,
-                        fit: BoxFit.cover,
+                  Container(
+                    height: 168,
+                    padding: const EdgeInsets.fromLTRB(22, 18, 10, 18),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF123D59), Color(0xFF0B746F)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
                       ),
-                      Positioned(
-                        left: 18,
-                        bottom: 16,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 9,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xD90D2B45),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Text(
-                            'KINGO Medico AI\nSempre con te',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              height: 1.25,
-                            ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'La salute, spiegata con chiarezza.',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.18,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Informazioni semplici e strumenti utili, sempre con te.',
+                                style: TextStyle(
+                                  color: Color(0xFFD8F7F5),
+                                  fontSize: 14,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                        Image.asset(
+                          'assets/branding/salute_risponde_icon.png',
+                          width: 118,
+                          height: 118,
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -280,7 +293,7 @@ class HomePage extends StatelessWidget {
             const Text(
               'Tutto quello di cui hai bisogno',
               style: TextStyle(
-                color: KingoMedicoApp.navy,
+                color: SaluteRispondeApp.navy,
                 fontSize: 21,
                 fontWeight: FontWeight.w900,
               ),
@@ -368,6 +381,35 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class _BrandWordmark extends StatelessWidget {
+  const _BrandWordmark();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.asset(
+          'assets/branding/salute_risponde_icon.png',
+          width: 48,
+          height: 48,
+          fit: BoxFit.contain,
+        ),
+        const SizedBox(width: 9),
+        const Text(
+          'Salute\nRisponde',
+          style: TextStyle(
+            color: SaluteRispondeApp.navy,
+            fontSize: 20,
+            height: 0.98,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _ServiceCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -400,8 +442,8 @@ class _ServiceCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      KingoMedicoApp.secondary,
-                      KingoMedicoApp.primary,
+                      SaluteRispondeApp.secondary,
+                      SaluteRispondeApp.primary,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(14),
@@ -414,7 +456,7 @@ class _ServiceCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: KingoMedicoApp.navy,
+                  color: SaluteRispondeApp.navy,
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
                   height: 1.15,
@@ -464,12 +506,12 @@ class _ActionTile extends StatelessWidget {
             color: const Color(0xFFE7F7F6),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: Icon(icon, color: KingoMedicoApp.primary),
+          child: Icon(icon, color: SaluteRispondeApp.primary),
         ),
         title: Text(
           title,
           style: const TextStyle(
-            color: KingoMedicoApp.navy,
+            color: SaluteRispondeApp.navy,
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -489,8 +531,8 @@ class MedicalChatPage extends StatefulWidget {
 }
 
 class _MedicalChatPageState extends State<MedicalChatPage> {
-  static const int _freeLimit = 2;
-  static const String _freeCountKey = 'kingo_medico_free_answers_used';
+  static const int _freeLimit = 3;
+  static const String _freeCountKey = 'salute_risponde_free_answers_used';
 
   final _service = MedicalAiService();
   final _storage = AppStorageService();
@@ -501,7 +543,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     _ChatMessage(
       user: false,
       text:
-          'Ciao, sono KINGO Medico. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.',
+          'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.',
     ),
   ].toList();
 
@@ -562,16 +604,16 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
               const Icon(
                 Icons.workspace_premium_rounded,
                 size: 42,
-                color: KingoMedicoApp.primary,
+                color: SaluteRispondeApp.primary,
               ),
               const SizedBox(height: 12),
               const Text(
-                'Hai utilizzato le 2 risposte gratuite',
+                'Hai utilizzato le 3 risposte gratuite',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Per continuare a parlare con KINGO Medico scegli il piano PLUS o PRO.',
+                'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.',
                 style: TextStyle(fontSize: 16, height: 1.4),
               ),
               const SizedBox(height: 18),
@@ -623,14 +665,14 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       _messages.add(_ChatMessage(user: true, text: text));
       _controller.clear();
       _sending = true;
-      _statusMessage = 'KINGO sta rispondendo…';
+      _statusMessage = 'Salute Risponde sta rispondendo…';
     });
     _scrollToBottom();
 
     Future<void>.delayed(const Duration(seconds: 15), () {
       if (mounted && _sending) {
         setState(() {
-          _statusMessage = 'KINGO sta elaborando la risposta, ancora qualche secondo…';
+          _statusMessage = 'Salute Risponde sta elaborando la risposta, ancora qualche secondo…';
         });
         _scrollToBottom();
       }
@@ -680,7 +722,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
         _messages.add(
           _ChatMessage(
             user: false,
-            text: 'Errore app KINGO: ${e.runtimeType}. Riprova.',
+            text: 'Errore app Salute Risponde: ${e.runtimeType}. Riprova.',
           ),
         );
         _statusMessage = null;
@@ -713,13 +755,13 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
         title: Row(
           children: [
             Image.asset(
-              'assets/branding/app_icon.png',
+              'assets/branding/salute_risponde_icon.png',
               width: 34,
               height: 34,
               fit: BoxFit.cover,
             ),
             const SizedBox(width: 10),
-            const Text('Parla con KINGO'),
+            const Text('Fai una domanda'),
           ],
         ),
       ),
@@ -735,7 +777,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Text(
-                'TESTER KOL • risposte illimitate',
+                'COLLAUDO • risposte illimitate',
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
@@ -763,22 +805,22 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: KingoMedicoApp.primary, width: 1.5),
+                border: Border.all(color: SaluteRispondeApp.primary, width: 1.5),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Hai terminato le 2 risposte gratuite',
+                    'Hai terminato le 3 risposte gratuite',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
-                      color: KingoMedicoApp.text,
+                      color: SaluteRispondeApp.text,
                     ),
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'Continua con KINGO Medico scegliendo PLUS o PRO.',
+                    'Continua con Salute Risponde scegliendo PLUS o PRO.',
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -826,7 +868,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: m.user
-                          ? KingoMedicoApp.primary
+                          ? SaluteRispondeApp.primary
                           : Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(22),
@@ -848,7 +890,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                     child: Text(
                       m.text,
                       style: TextStyle(
-                        color: m.user ? Colors.white : KingoMedicoApp.text,
+                        color: m.user ? Colors.white : SaluteRispondeApp.text,
                         height: 1.35,
                       ),
                     ),
@@ -870,7 +912,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      _statusMessage ?? 'KINGO sta rispondendo…',
+                      _statusMessage ?? 'Salute Risponde sta rispondendo…',
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -903,7 +945,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                   height: 52,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [KingoMedicoApp.secondary, KingoMedicoApp.primary],
+                      colors: [SaluteRispondeApp.secondary, SaluteRispondeApp.primary],
                     ),
                     borderRadius: BorderRadius.circular(18),
                   ),
@@ -946,10 +988,13 @@ class DocumentsPage extends StatefulWidget {
 
 class _DocumentsPageState extends State<DocumentsPage> {
   final _storage = AppStorageService();
+  final _documentAi = DocumentAiService();
+  final _imagePicker = ImagePicker();
   List<Map<String, dynamic>> _documents = [];
   PlatformFile? _pending;
   int? _selectedIndex;
   int? _openingIndex;
+  bool _analyzing = false;
 
   @override
   void initState() {
@@ -969,6 +1014,65 @@ class _DocumentsPageState extends State<DocumentsPage> {
     );
     if (result == null || result.files.isEmpty) return;
     setState(() => _pending = result.files.first);
+  }
+
+  Future<void> _takePhoto() async {
+    final photo = await _imagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 88,
+      maxWidth: 2200,
+    );
+    if (photo == null) return;
+
+    final length = await photo.length();
+    setState(() {
+      _pending = PlatformFile(
+        name: photo.name,
+        path: photo.path,
+        size: length,
+      );
+    });
+  }
+
+  Future<void> _chooseSource() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const ListTile(
+                title: Text(
+                  'Aggiungi un documento',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
+                ),
+                subtitle: Text('Fotografa il documento oppure scegli un file già salvato.'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera_outlined),
+                title: const Text('Scatta una foto'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _takePhoto();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.folder_open_outlined),
+                title: const Text('Scegli dalla galleria o dai file'),
+                subtitle: const Text('PDF, JPG, PNG o WEBP'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _choose();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _savePending() async {
@@ -1062,13 +1166,68 @@ class _DocumentsPageState extends State<DocumentsPage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
-  void _sendSelectedToKingo() {
+  Future<void> _analyzeSelected() async {
     if (_selectedIndex == null) {
       _snack('Seleziona prima un documento.');
       return;
     }
+
     final item = _documents[_selectedIndex!];
-    _snack('Documento "${item['name']}" selezionato. Il collegamento all’analisi KINGO verrà attivato nel modulo documenti.');
+    final path = item['path']?.toString() ?? '';
+    final extension = path.toLowerCase().split('.').last;
+
+    if (path.isEmpty || !await File(path).exists()) {
+      _snack('Il file non è più disponibile sul dispositivo.');
+      return;
+    }
+
+    if (!['jpg', 'jpeg', 'png', 'webp'].contains(extension)) {
+      _snack('Per ora l’analisi è disponibile per foto e immagini. Fotografa le pagine del PDF.');
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Analizzare il documento?'),
+        content: const Text(
+          'La foto verrà inviata in modo sicuro al servizio di analisi per leggerla e spiegarla. Evita di inviare documenti di altre persone senza il loro consenso.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('ANNULLA'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('ANALIZZA'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _analyzing = true);
+    try {
+      final explanation = await _documentAi.analyzeImage(path);
+      if (!mounted) return;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => _DocumentAnalysisPage(
+            documentName: item['name']?.toString() ?? 'Documento',
+            explanation: explanation,
+          ),
+        ),
+      );
+    } on DocumentAiException catch (e) {
+      if (mounted) _snack(e.message);
+    } catch (_) {
+      if (mounted) _snack('Non è stato possibile analizzare il documento.');
+    } finally {
+      if (mounted) setState(() => _analyzing = false);
+    }
   }
 
   @override
@@ -1079,9 +1238,9 @@ class _DocumentsPageState extends State<DocumentsPage> {
         padding: const EdgeInsets.all(16),
         children: [
           FilledButton.icon(
-            onPressed: _choose,
-            icon: const Icon(Icons.upload_file),
-            label: const Text('Scegli un esame o referto'),
+            onPressed: _chooseSource,
+            icon: const Icon(Icons.add_a_photo_outlined),
+            label: const Text('Fotografa o scegli un documento'),
           ),
           if (_pending != null) ...[
             const SizedBox(height: 14),
@@ -1116,7 +1275,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
               return Card(
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                    color: selected ? KingoMedicoApp.primary : Colors.transparent,
+                    color: selected ? SaluteRispondeApp.primary : Colors.transparent,
                     width: 1.5,
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -1125,7 +1284,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
                   onTap: () => setState(() => _selectedIndex = i),
                   leading: Icon(
                     selected ? Icons.check_circle : Icons.folder_copy_outlined,
-                    color: KingoMedicoApp.primary,
+                    color: SaluteRispondeApp.primary,
                   ),
                   title: Text(item['name']?.toString() ?? 'Documento'),
                   subtitle: Text(
@@ -1159,9 +1318,56 @@ class _DocumentsPageState extends State<DocumentsPage> {
             }),
           const SizedBox(height: 12),
           OutlinedButton.icon(
-            onPressed: _selectedIndex == null ? null : _sendSelectedToKingo,
-            icon: const Icon(Icons.auto_awesome),
-            label: const Text('Invia a KINGO per spiegazione'),
+            onPressed: _selectedIndex == null || _analyzing ? null : _analyzeSelected,
+            icon: _analyzing
+                ? const SizedBox(
+                    width: 19,
+                    height: 19,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.auto_awesome),
+            label: Text(_analyzing ? 'Analisi in corso…' : 'Analizza e spiegami'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DocumentAnalysisPage extends StatelessWidget {
+  final String documentName;
+  final String explanation;
+
+  const _DocumentAnalysisPage({
+    required this.documentName,
+    required this.explanation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Spiegazione del documento')),
+      body: ListView(
+        padding: const EdgeInsets.all(18),
+        children: [
+          Text(
+            documentName,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: SelectableText(
+                explanation.replaceAll('**', ''),
+                style: const TextStyle(fontSize: 16, height: 1.48),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.',
+            style: TextStyle(color: Colors.black54, height: 1.4),
           ),
         ],
       ),
@@ -1294,7 +1500,7 @@ class _AgendaPageState extends State<AgendaPage> {
                   child: ListTile(
                     leading: const Icon(
                       Icons.event_available,
-                      color: KingoMedicoApp.primary,
+                      color: SaluteRispondeApp.primary,
                     ),
                     title: Text(item['title']?.toString() ?? 'Visita'),
                     subtitle: Text(dt == null ? '' : _formatDateTime(dt)),
@@ -1522,7 +1728,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
                     onTap: () => _edit(i),
                     leading: const Icon(
                       Icons.medication,
-                      color: KingoMedicoApp.primary,
+                      color: SaluteRispondeApp.primary,
                     ),
                     title: Text(m['name']?.toString() ?? 'Farmaco'),
                     subtitle: Text(
@@ -1650,7 +1856,7 @@ class UsefulNumbersPage extends StatefulWidget {
 }
 
 class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
-  static const _contactsKey = 'kingo_medico_personal_health_contacts';
+  static const _contactsKey = 'salute_risponde_personal_health_contacts';
   List<Map<String, String>> _contacts = [];
 
   @override
@@ -1795,7 +2001,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
           ...numbers.map(
             (item) => Card(
               child: ListTile(
-                leading: const Icon(Icons.phone_in_talk, color: KingoMedicoApp.primary),
+                leading: const Icon(Icons.phone_in_talk, color: SaluteRispondeApp.primary),
                 title: Text(item.$1),
                 subtitle: Text(item.$2),
                 trailing: const Icon(Icons.phone),
@@ -1830,7 +2036,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
                 child: ListTile(
                   leading: const Icon(
                     Icons.medical_services_outlined,
-                    color: KingoMedicoApp.primary,
+                    color: SaluteRispondeApp.primary,
                   ),
                   title: Text(c['name'] ?? 'Contatto'),
                   subtitle: Text(subtitleParts.join(' • ')),
@@ -1923,7 +2129,7 @@ class _PlansPageState extends State<PlansPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Piani KINGO Medico')),
+      appBar: AppBar(title: const Text('Piani Salute Risponde')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -1931,7 +2137,7 @@ class _PlansPageState extends State<PlansPage> {
             title: 'FREE',
             price: 'Gratis',
             features: const [
-              '2 risposte gratuite',
+              '3 risposte gratuite',
               '1 esame o referto',
               'Avvisi di sicurezza sempre disponibili',
             ],
@@ -2010,7 +2216,7 @@ class _PlanCard extends StatelessWidget {
             Text(
               price,
               style: const TextStyle(
-                color: KingoMedicoApp.primary,
+                color: SaluteRispondeApp.primary,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -2058,7 +2264,7 @@ class AccountPage extends StatelessWidget {
               if (current == 'TESTER') {
                 await storage.setSelectedPlan('FREE');
                 final prefs = await SharedPreferences.getInstance();
-                await prefs.setInt('kingo_medico_free_answers_used', 0);
+                await prefs.setInt('salute_risponde_free_answers_used', 0);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -2068,7 +2274,7 @@ class AccountPage extends StatelessWidget {
                 }
               }
             },
-            child: const Text('Account KINGO Medico'),
+            child: const Text('Account Salute Risponde'),
           ),
           bottom: const TabBar(
             tabs: [
@@ -2169,15 +2375,15 @@ class _SafetyCard extends StatelessWidget {
         children: [
           Icon(
             Icons.verified_user_outlined,
-            color: KingoMedicoApp.secondary,
+            color: SaluteRispondeApp.secondary,
             size: 28,
           ),
           SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Sicuro. Affidabile. Umano.\nKINGO Medico offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.',
+              'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.',
               style: TextStyle(
-                color: KingoMedicoApp.navy,
+                color: SaluteRispondeApp.navy,
                 height: 1.45,
                 fontWeight: FontWeight.w600,
               ),
