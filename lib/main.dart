@@ -538,6 +538,8 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
   final _storage = AppStorageService();
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
+  final _chatImagePicker = ImagePicker();
+  PlatformFile? _chatAttachment;
 
   final List<_ChatMessage> _messages = const [
     _ChatMessage(
@@ -645,14 +647,160 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     );
   }
 
+  Future<void> _takeChatPhoto() async {
+    final photo = await _chatImagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 90,
+      maxWidth: 2400,
+    );
+    if (photo == null) return;
+
+    final size = await photo.length();
+    if (size < 1 || size > 10 * 1024 * 1024) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('La foto deve avere una dimensione massima di 10 MB.')),
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _chatAttachment = PlatformFile(
+        name: photo.name,
+        path: photo.path,
+        size: size,
+      );
+    });
+  }
+
+  Future<void> _pickChatGallery() async {
+    final image = await _chatImagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 92,
+      maxWidth: 2600,
+    );
+    if (image == null) return;
+
+    final size = await image.length();
+    if (size < 1 || size > 10 * 1024 * 1024) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('L’immagine deve avere una dimensione massima di 10 MB.')),
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _chatAttachment = PlatformFile(
+        name: image.name,
+        path: image.path,
+        size: size,
+      );
+    });
+  }
+
+  Future<void> _pickChatPdf() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['pdf'],
+    );
+    if (result == null || result.files.isEmpty) return;
+
+    final file = result.files.first;
+    if (file.path == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Non riesco ad accedere al PDF selezionato.')),
+        );
+      }
+      return;
+    }
+    if (file.size < 1 || file.size > 10 * 1024 * 1024) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Il PDF deve avere una dimensione massima di 10 MB.')),
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() => _chatAttachment = file);
+  }
+
+  Future<void> _chooseChatAttachment() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const ListTile(
+                title: Text(
+                  'Allega alla domanda',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
+                ),
+                subtitle: Text('Foto, immagine dalla galleria oppure PDF.'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera_outlined),
+                title: const Text('Scatta una foto'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _takeChatPhoto();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library_outlined),
+                title: const Text('Scegli dalla galleria'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickChatGallery();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined),
+                title: const Text('Allega un PDF'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickChatPdf();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _send() async {
-    final text = _controller.text.trim();
-    if (text.isEmpty || _sending) return;
+    final typedText = _controller.text.trim();
+    final attachment = _chatAttachment;
+
+    if ((typedText.isEmpty && attachment == null) || _sending) return;
 
     if (_plan == 'FREE' && _freeUsed >= _freeLimit) {
       await _showUpgrade();
       return;
     }
+
+    if (attachment != null && attachment.path == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('L’allegato non è più disponibile. Selezionalo di nuovo.')),
+      );
+      return;
+    }
+
+    final message = typedText.isEmpty
+        ? 'Analizza e spiegami questo allegato sanitario.'
+        : typedText;
 
     final history = _messages
         .map((m) => {
@@ -661,25 +809,39 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
             })
         .toList();
 
+    final visibleMessage = attachment == null
+        ? message
+        : '$message\n📎 ${attachment.name}';
+
     setState(() {
-      _messages.add(_ChatMessage(user: true, text: text));
+      _messages.add(_ChatMessage(user: true, text: visibleMessage));
       _controller.clear();
+      _chatAttachment = null;
       _sending = true;
-      _statusMessage = 'Salute Risponde sta rispondendo…';
+      _statusMessage = attachment == null
+          ? 'Salute Risponde sta rispondendo…'
+          : 'Salute Risponde sta analizzando l’allegato…';
     });
     _scrollToBottom();
 
     Future<void>.delayed(const Duration(seconds: 15), () {
       if (mounted && _sending) {
         setState(() {
-          _statusMessage = 'Salute Risponde sta elaborando la risposta, ancora qualche secondo…';
+          _statusMessage = attachment == null
+              ? 'Salute Risponde sta elaborando la risposta, ancora qualche secondo…'
+              : 'Analisi dell’allegato in corso, ancora qualche secondo…';
         });
         _scrollToBottom();
       }
     });
 
     try {
-      final reply = await _service.sendMessage(message: text, history: history);
+      final reply = await _service.sendMessage(
+        message: message,
+        history: history,
+        attachmentPath: attachment?.path,
+        attachmentName: attachment?.name,
+      );
 
       final cleanedReply = _cleanAiText(reply);
 
@@ -923,46 +1085,108 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      enabled: !(free && _freeUsed >= _freeLimit),
-                      minLines: 1,
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        hintText: free && _freeUsed >= _freeLimit
-                            ? 'Scegli PLUS o PRO per continuare'
-                            : 'Scrivi cosa vuoi capire...',
-                        border: InputBorder.none,
+                  if (_chatAttachment != null)
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.fromLTRB(12, 8, 6, 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5F8),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFD3E7EC)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            _chatAttachment!.name.toLowerCase().endsWith('.pdf')
+                                ? Icons.picture_as_pdf_outlined
+                                : Icons.image_outlined,
+                            color: SaluteRispondeApp.primary,
+                          ),
+                          const SizedBox(width: 9),
+                          Expanded(
+                            child: Text(
+                              _chatAttachment!.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: 'Rimuovi allegato',
+                            onPressed: _sending
+                                ? null
+                                : () => setState(() => _chatAttachment = null),
+                            icon: const Icon(Icons.close_rounded),
+                          ),
+                        ],
                       ),
                     ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE8F5F8),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: IconButton(
+                          tooltip: 'Allega foto o PDF',
+                          color: SaluteRispondeApp.primary,
+                          onPressed: _sending || (free && _freeUsed >= _freeLimit)
+                              ? null
+                              : _chooseChatAttachment,
+                          icon: const Icon(Icons.attach_file_rounded),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          enabled: !(free && _freeUsed >= _freeLimit),
+                          minLines: 1,
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            hintText: free && _freeUsed >= _freeLimit
+                                ? 'Scegli PLUS o PRO per continuare'
+                                : 'Scrivi una domanda o allega un esame...',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              SaluteRispondeApp.secondary,
+                              SaluteRispondeApp.primary,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: IconButton(
+                          color: Colors.white,
+                          onPressed: _sending
+                              ? null
+                              : (free && _freeUsed >= _freeLimit)
+                                  ? _showUpgrade
+                                  : _send,
+                          icon: Icon(
+                            free && _freeUsed >= _freeLimit
+                                ? Icons.workspace_premium
+                                : Icons.send_rounded,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [SaluteRispondeApp.secondary, SaluteRispondeApp.primary],
-                    ),
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  child: IconButton(
-                    color: Colors.white,
-                    onPressed: _sending
-                        ? null
-                        : (free && _freeUsed >= _freeLimit)
-                            ? _showUpgrade
-                            : _send,
-                    icon: Icon(
-                      free && _freeUsed >= _freeLimit
-                          ? Icons.workspace_premium
-                          : Icons.send_rounded,
-                    ),
-                  ),
-                ),
                 ],
               ),
             ),
