@@ -1,20 +1,68 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
 class MedicalAiService {
   static const String _endpoint =
       'https://www.kingofline.it/wp-json/salute-risponde/v1/chat';
-  static const Duration _timeout = Duration(seconds: 60);
+  static const Duration _textTimeout = Duration(seconds: 60);
+  static const Duration _attachmentTimeout = Duration(seconds: 90);
+  static const int _maxBytes = 10 * 1024 * 1024;
 
   Future<String> sendMessage({
     required String message,
     List<Map<String, String>> history = const [],
+    String? attachmentPath,
+    String? attachmentName,
   }) async {
     final clean = message.trim();
-    if (clean.isEmpty) {
-      throw const MedicalAiException('Scrivi un messaggio prima di inviare.');
+    if (clean.isEmpty && attachmentPath == null) {
+      throw const MedicalAiException('Scrivi un messaggio oppure allega un file.');
+    }
+
+    final payload = <String, dynamic>{
+      'message': clean,
+      'history': history,
+      'language': 'it',
+    };
+
+    if (attachmentPath != null) {
+      final file = File(attachmentPath);
+      if (!await file.exists()) {
+        throw const MedicalAiException(
+          'L’allegato non è più disponibile sul dispositivo.',
+        );
+      }
+
+      final size = await file.length();
+      if (size < 1 || size > _maxBytes) {
+        throw const MedicalAiException(
+          'L’allegato deve avere una dimensione massima di 10 MB.',
+        );
+      }
+
+      final lowerName = (attachmentName ?? attachmentPath).toLowerCase();
+      String mimeType;
+      if (lowerName.endsWith('.jpg') || lowerName.endsWith('.jpeg')) {
+        mimeType = 'image/jpeg';
+      } else if (lowerName.endsWith('.png')) {
+        mimeType = 'image/png';
+      } else if (lowerName.endsWith('.webp')) {
+        mimeType = 'image/webp';
+      } else if (lowerName.endsWith('.pdf')) {
+        mimeType = 'application/pdf';
+      } else {
+        throw const MedicalAiException(
+          'Formato non supportato. Usa JPG, PNG, WEBP oppure PDF.',
+        );
+      }
+
+      final bytes = await file.readAsBytes();
+      payload['attachment_base64'] = base64Encode(bytes);
+      payload['attachment_mime'] = mimeType;
+      payload['attachment_name'] = attachmentName ?? file.uri.pathSegments.last;
     }
 
     try {
@@ -25,13 +73,11 @@ class MedicalAiService {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
-            body: jsonEncode({
-              'message': clean,
-              'history': history,
-              'language': 'it',
-            }),
+            body: jsonEncode(payload),
           )
-          .timeout(_timeout);
+          .timeout(
+            attachmentPath == null ? _textTimeout : _attachmentTimeout,
+          );
 
       dynamic decoded;
       try {
@@ -60,8 +106,10 @@ class MedicalAiService {
         'Servizio Salute Risponde temporaneamente non disponibile (${response.statusCode}).',
       );
     } on TimeoutException {
-      throw const MedicalAiException(
-        'Salute Risponde sta impiegando più del previsto. Nessuna risposta ricevuta entro 60 secondi: riprova.',
+      throw MedicalAiException(
+        attachmentPath == null
+            ? 'Salute Risponde sta impiegando più del previsto. Nessuna risposta ricevuta entro 60 secondi: riprova.'
+            : 'L’analisi dell’allegato sta impiegando più del previsto. Riprova tra poco.',
       );
     } on MedicalAiException {
       rethrow;
