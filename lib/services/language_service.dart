@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,10 +19,19 @@ class LanguageOption {
 
 class LanguageService {
   static const String _prefsKey = 'salute_risponde_language';
+  static const String automaticCode = 'auto';
 
-  static final ValueNotifier<String> notifier = ValueNotifier<String>('it');
+  // Per impostazione predefinita l'app segue la lingua del telefono.
+  static final ValueNotifier<String> notifier =
+      ValueNotifier<String>(automaticCode);
 
   static const List<LanguageOption> options = [
+    LanguageOption(
+      code: automaticCode,
+      nativeName: 'Automatico · Telefono',
+      flag: '🌐',
+      locale: Locale('und'),
+    ),
     LanguageOption(
       code: 'it',
       nativeName: 'Italiano',
@@ -305,8 +316,12 @@ class LanguageService {
   static Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString(_prefsKey);
+
     if (saved != null && options.any((option) => option.code == saved)) {
       notifier.value = saved;
+    } else {
+      notifier.value = automaticCode;
+      await prefs.setString(_prefsKey, automaticCode);
     }
   }
 
@@ -317,19 +332,34 @@ class LanguageService {
     await prefs.setString(_prefsKey, code);
   }
 
-  static String get currentCode => notifier.value;
+  static String _deviceLanguageCode() {
+    final code =
+        ui.PlatformDispatcher.instance.locale.languageCode.toLowerCase();
+    const supported = {'it', 'en', 'es', 'fr', 'de', 'pt'};
+    return supported.contains(code) ? code : 'it';
+  }
+
+  static String get selectedCode => notifier.value;
+
+  // Codice effettivo: in Automatico segue il telefono.
+  static String get currentCode =>
+      notifier.value == automaticCode ? _deviceLanguageCode() : notifier.value;
 
   static Locale get locale {
+    final effectiveCode = currentCode;
     return options
+        .where((option) => option.code != automaticCode)
         .firstWhere(
-          (option) => option.code == currentCode,
-          orElse: () => options.first,
+          (option) => option.code == effectiveCode,
+          orElse: () => options.firstWhere((option) => option.code == 'it'),
         )
         .locale;
   }
 
-  static List<Locale> get supportedLocales =>
-      options.map((option) => option.locale).toList(growable: false);
+  static List<Locale> get supportedLocales => options
+      .where((option) => option.code != automaticCode)
+      .map((option) => option.locale)
+      .toList(growable: false);
 
   static String t(String key) {
     final selected = _strings[currentCode] ?? _strings['it']!;
