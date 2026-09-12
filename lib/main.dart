@@ -12,11 +12,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'services/app_storage_service.dart';
 import 'services/document_ai_service.dart';
+import 'services/language_service.dart';
 import 'services/medical_ai_service.dart';
 import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LanguageService.initialize();
   await NotificationService.instance.initialize();
   runApp(const SaluteRispondeApp());
 }
@@ -42,11 +44,14 @@ class SaluteRispondeApp extends StatelessWidget {
       surface: surface,
     );
 
-    return MaterialApp(
+    return ValueListenableBuilder<String>(
+      valueListenable: LanguageService.notifier,
+      builder: (context, languageCode, _) {
+        return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Salute Risponde',
-      locale: const Locale('it', 'IT'),
-      supportedLocales: const [Locale('it', 'IT')],
+      locale: LanguageService.locale,
+      supportedLocales: LanguageService.supportedLocales,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -109,6 +114,8 @@ class SaluteRispondeApp extends StatelessWidget {
         ),
       ),
       home: const HomePage(),
+        );
+      },
     );
   }
 }
@@ -118,6 +125,11 @@ class HomePage extends StatelessWidget {
 
   void _open(BuildContext context, Widget page) {
     Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+  }
+
+  Future<void> _openKol() async {
+    final uri = Uri.parse('https://www.kol.it');
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   Future<void> _activateTester(BuildContext context) async {
@@ -166,8 +178,32 @@ class HomePage extends StatelessWidget {
                   child: const _BrandWordmark(),
                 ),
                 const Spacer(),
+                PopupMenuButton<String>(
+                  tooltip: LanguageService.t('language'),
+                  icon: const Icon(Icons.language_rounded),
+                  onSelected: LanguageService.setLanguage,
+                  itemBuilder: (context) => LanguageService.options
+                      .map(
+                        (option) => PopupMenuItem<String>(
+                          value: option.code,
+                          child: Row(
+                            children: [
+                              Text(option.flag, style: const TextStyle(fontSize: 20)),
+                              const SizedBox(width: 10),
+                              Text(option.nativeName),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+                IconButton(
+                  tooltip: LanguageService.t('instructions'),
+                  onPressed: () => _open(context, const InstructionsPage()),
+                  icon: const Icon(Icons.info_outline_rounded),
+                ),
                 IconButton.filledTonal(
-                  tooltip: 'Account',
+                  tooltip: LanguageService.t('account'),
                   onPressed: () => _open(context, const AccountPage()),
                   icon: const Icon(Icons.person_outline_rounded),
                 ),
@@ -199,8 +235,8 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Ciao 👋',
+                        Text(
+                          LanguageService.t('home_hello'),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 27,
@@ -208,8 +244,8 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        const Text(
-                          'Come posso aiutarti oggi?',
+                        Text(
+                          LanguageService.t('home_help_today'),
                           style: TextStyle(
                             color: Color(0xFFD8F7F5),
                             fontSize: 15.5,
@@ -230,8 +266,8 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             icon: const Icon(Icons.chat_bubble_outline_rounded),
-                            label: const Text(
-                              'Fai una domanda',
+                            label: Text(
+                              LanguageService.t('ask_question'),
                               style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                           ),
@@ -251,13 +287,13 @@ class HomePage extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'La salute, spiegata con chiarezza.',
+                                LanguageService.t('health_clear'),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -267,7 +303,7 @@ class HomePage extends StatelessWidget {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                'Informazioni semplici e strumenti utili, sempre con te.',
+                                LanguageService.t('simple_tools'),
                                 style: TextStyle(
                                   color: Color(0xFFD8F7F5),
                                   fontSize: 14,
@@ -290,8 +326,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Tutto quello di cui hai bisogno',
+            Text(
+              LanguageService.t('everything_you_need'),
               style: TextStyle(
                 color: SaluteRispondeApp.navy,
                 fontSize: 21,
@@ -309,26 +345,26 @@ class HomePage extends StatelessWidget {
               children: [
                 _ServiceCard(
                   icon: Icons.calendar_month_rounded,
-                  title: 'Agenda Salute',
-                  subtitle: 'Appuntamenti e visite',
+                  title: LanguageService.t('agenda_health'),
+                  subtitle: LanguageService.t('appointments_visits'),
                   onTap: () => _open(context, const AgendaPage()),
                 ),
                 _ServiceCard(
                   icon: Icons.description_outlined,
-                  title: 'Esami e Referti',
-                  subtitle: 'I tuoi documenti',
+                  title: LanguageService.t('tests_reports'),
+                  subtitle: LanguageService.t('your_documents'),
                   onTap: () => _open(context, const DocumentsPage()),
                 ),
                 _ServiceCard(
                   icon: Icons.medication_outlined,
-                  title: 'Promemoria Farmaci',
-                  subtitle: 'Terapie sotto controllo',
+                  title: LanguageService.t('medicine_reminders'),
+                  subtitle: LanguageService.t('therapies_control'),
                   onTap: () => _open(context, const MedicinesPage()),
                 ),
                 _ServiceCard(
                   icon: Icons.phone_in_talk_rounded,
-                  title: 'Numeri Utili',
-                  subtitle: 'Contatti rapidi',
+                  title: LanguageService.t('useful_numbers'),
+                  subtitle: LanguageService.t('quick_contacts'),
                   onTap: () => _open(context, const UsefulNumbersPage()),
                 ),
               ],
@@ -336,8 +372,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 14),
             _ActionTile(
               icon: Icons.workspace_premium_outlined,
-              title: 'Piani FREE, PLUS e PRO',
-              subtitle: 'Scegli il piano più adatto',
+              title: LanguageService.t('plans_title'),
+              subtitle: LanguageService.t('choose_plan'),
               onTap: () => _open(context, const PlansPage()),
             ),
             const SizedBox(height: 18),
@@ -362,8 +398,8 @@ class HomePage extends StatelessWidget {
                     end: Alignment.bottomCenter,
                   ),
                 ),
-                child: const Text(
-                  'Tecnologia che si prende cura di te.',
+                child: Text(
+                  LanguageService.t('technology_cares'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 21,
@@ -374,12 +410,149 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const _SafetyCard(),
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                '© 2026 SaluteRisponde',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFF6B7F87),
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
+            Center(
+              child: InkWell(
+                onTap: _openKol,
+                borderRadius: BorderRadius.circular(10),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: Text(
+                    LanguageService.t('powered_by'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: SaluteRispondeApp.primary,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+
+class InstructionsPage extends StatelessWidget {
+  const InstructionsPage({super.key});
+
+  Widget _section(IconData icon, String title, String body) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE7F7F6),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: Icon(icon, color: SaluteRispondeApp.primary),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: SaluteRispondeApp.navy,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    body,
+                    style: const TextStyle(
+                      color: SaluteRispondeApp.text,
+                      fontSize: 14.5,
+                      height: 1.42,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(LanguageService.t('instructions'))),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(18, 10, 18, 28),
+          children: [
+            Text(
+              LanguageService.t('instructions_intro'),
+              style: const TextStyle(
+                color: SaluteRispondeApp.text,
+                fontSize: 15,
+                height: 1.45,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _section(
+              Icons.chat_bubble_outline_rounded,
+              LanguageService.t('instructions_chat_title'),
+              LanguageService.t('instructions_chat_body'),
+            ),
+            const SizedBox(height: 12),
+            _section(
+              Icons.description_outlined,
+              LanguageService.t('instructions_docs_title'),
+              LanguageService.t('instructions_docs_body'),
+            ),
+            const SizedBox(height: 12),
+            _section(
+              Icons.calendar_month_rounded,
+              LanguageService.t('instructions_agenda_title'),
+              LanguageService.t('instructions_agenda_body'),
+            ),
+            const SizedBox(height: 12),
+            _section(
+              Icons.medication_outlined,
+              LanguageService.t('instructions_meds_title'),
+              LanguageService.t('instructions_meds_body'),
+            ),
+            const SizedBox(height: 12),
+            _section(
+              Icons.health_and_safety_outlined,
+              LanguageService.t('instructions_safety_title'),
+              LanguageService.t('instructions_safety_body'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class _BrandWordmark extends StatelessWidget {
   const _BrandWordmark();
