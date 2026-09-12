@@ -27,37 +27,43 @@ class DocumentAiService {
       );
     }
 
-    final extension = filePath.toLowerCase().split('.').last;
+    final lowerPath = filePath.toLowerCase();
+    String mimeType;
 
-    if (!['jpg', 'jpeg', 'png', 'webp', 'pdf'].contains(extension)) {
+    if (lowerPath.endsWith('.jpg') || lowerPath.endsWith('.jpeg')) {
+      mimeType = 'image/jpeg';
+    } else if (lowerPath.endsWith('.png')) {
+      mimeType = 'image/png';
+    } else if (lowerPath.endsWith('.webp')) {
+      mimeType = 'image/webp';
+    } else if (lowerPath.endsWith('.pdf')) {
+      mimeType = 'application/pdf';
+    } else {
       throw const DocumentAiException(
         'Formato non supportato. Usa JPG, PNG, WEBP oppure PDF.',
       );
     }
 
+    final bytes = await file.readAsBytes();
+    final filename = file.uri.pathSegments.isNotEmpty
+        ? file.uri.pathSegments.last
+        : (mimeType == 'application/pdf' ? 'documento.pdf' : 'documento.jpg');
+
     try {
-      final request = http.MultipartRequest(
-        'POST',
-        Uri.parse(_endpoint),
-      );
-
-      request.headers['Accept'] = 'application/json';
-
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'document',
-          filePath,
-          filename: file.uri.pathSegments.isNotEmpty
-              ? file.uri.pathSegments.last
-              : 'documento.$extension',
-        ),
-      );
-
-      final streamedResponse =
-          await request.send().timeout(_timeout);
-
-      final response =
-          await http.Response.fromStream(streamedResponse).timeout(_timeout);
+      final response = await http
+          .post(
+            Uri.parse(_endpoint),
+            headers: const {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode({
+              'document_base64': base64Encode(bytes),
+              'mime_type': mimeType,
+              'filename': filename,
+            }),
+          )
+          .timeout(_timeout);
 
       dynamic decoded;
       try {
@@ -69,9 +75,7 @@ class DocumentAiService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         if (decoded is Map) {
           final explanation = decoded['explanation'];
-
-          if (explanation is String &&
-              explanation.trim().isNotEmpty) {
+          if (explanation is String && explanation.trim().isNotEmpty) {
             return explanation.trim();
           }
         }
@@ -82,14 +86,11 @@ class DocumentAiService {
       }
 
       if (decoded is Map && decoded['message'] is String) {
-        throw DocumentAiException(
-          decoded['message'].toString(),
-        );
+        throw DocumentAiException(decoded['message'].toString());
       }
 
       throw DocumentAiException(
-        'Analisi temporaneamente non disponibile '
-        '(${response.statusCode}).',
+        'Analisi temporaneamente non disponibile (${response.statusCode}).',
       );
     } on TimeoutException {
       throw const DocumentAiException(
@@ -104,7 +105,6 @@ class DocumentAiService {
     }
   }
 
-  // Manteniamo questo metodo per compatibilità con il codice RC 1.3.
   Future<String> analyzeImage(String imagePath) {
     return analyzeDocument(imagePath);
   }
