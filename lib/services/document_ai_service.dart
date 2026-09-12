@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import 'language_service.dart';
+
 class DocumentAiService {
   static const String _endpoint =
       'https://www.kingofline.it/wp-json/salute-risponde/v1/analyze-document';
@@ -61,6 +63,7 @@ class DocumentAiService {
               'document_base64': base64Encode(bytes),
               'mime_type': mimeType,
               'filename': filename,
+              'language': LanguageService.currentCode,
             }),
           )
           .timeout(_timeout);

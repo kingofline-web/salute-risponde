@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import 'language_service.dart';
+
 class MedicalAiService {
   static const String _endpoint =
       'https://www.kingofline.it/wp-json/salute-risponde/v1/chat';
@@ -25,7 +27,7 @@ class MedicalAiService {
     final payload = <String, dynamic>{
       'message': clean,
       'history': history,
-      'language': 'it',
+      'language': LanguageService.currentCode,
     };
 
     if (attachmentPath != null) {
