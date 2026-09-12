@@ -1398,15 +1398,9 @@ class _DocumentsPageState extends State<DocumentsPage> {
 
     final item = _documents[_selectedIndex!];
     final path = item['path']?.toString() ?? '';
-    final extension = path.toLowerCase().split('.').last;
 
     if (path.isEmpty || !await File(path).exists()) {
       _snack('Il file non è più disponibile sul dispositivo.');
-      return;
-    }
-
-    if (!['jpg', 'jpeg', 'png', 'webp'].contains(extension)) {
-      _snack('Per ora l’analisi è disponibile per foto e immagini. Fotografa le pagine del PDF.');
       return;
     }
 
@@ -1415,7 +1409,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Analizzare il documento?'),
         content: const Text(
-          'La foto verrà inviata in modo sicuro al servizio di analisi per leggerla e spiegarla. Evita di inviare documenti di altre persone senza il loro consenso.',
+          'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.',
         ),
         actions: [
           TextButton(
@@ -1434,7 +1428,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
 
     setState(() => _analyzing = true);
     try {
-      final explanation = await _documentAi.analyzeImage(path);
+      final explanation = await _documentAi.analyzeDocument(path);
       if (!mounted) return;
       await Navigator.push(
         context,
