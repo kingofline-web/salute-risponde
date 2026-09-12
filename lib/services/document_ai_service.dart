@@ -7,62 +7,57 @@ import 'package:http/http.dart' as http;
 class DocumentAiService {
   static const String _endpoint =
       'https://www.kingofline.it/wp-json/salute-risponde/v1/analyze-document';
-  static const Duration _timeout = Duration(seconds: 90);
+
+  static const Duration _timeout = Duration(seconds: 120);
   static const int _maxBytes = 10 * 1024 * 1024;
 
-  Future<String> analyzeImage(String imagePath) async {
-    final file = File(imagePath);
+  Future<String> analyzeDocument(String filePath) async {
+    final file = File(filePath);
 
     if (!await file.exists()) {
       throw const DocumentAiException(
-        'La foto selezionata non è più disponibile sul dispositivo.',
+        'Il documento selezionato non è più disponibile sul dispositivo.',
       );
     }
 
     final size = await file.length();
     if (size < 1 || size > _maxBytes) {
       throw const DocumentAiException(
-        'La foto deve avere una dimensione massima di 10 MB.',
+        'Il documento deve avere una dimensione massima di 10 MB.',
       );
     }
 
-    final extension = imagePath.toLowerCase().split('.').last;
+    final extension = filePath.toLowerCase().split('.').last;
 
-    String mimeType;
-    switch (extension) {
-      case 'jpg':
-      case 'jpeg':
-        mimeType = 'image/jpeg';
-        break;
-      case 'png':
-        mimeType = 'image/png';
-        break;
-      case 'webp':
-        mimeType = 'image/webp';
-        break;
-      default:
-        throw const DocumentAiException(
-          'Formato non supportato. Usa JPG, PNG oppure WEBP.',
-        );
+    if (!['jpg', 'jpeg', 'png', 'webp', 'pdf'].contains(extension)) {
+      throw const DocumentAiException(
+        'Formato non supportato. Usa JPG, PNG, WEBP oppure PDF.',
+      );
     }
 
     try {
-      final bytes = await file.readAsBytes();
-      final imageBase64 = base64Encode(bytes);
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse(_endpoint),
+      );
 
-      final response = await http
-          .post(
-            Uri.parse(_endpoint),
-            headers: const {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-            body: jsonEncode({
-              'image_base64': imageBase64,
-              'mime_type': mimeType,
-            }),
-          )
-          .timeout(_timeout);
+      request.headers['Accept'] = 'application/json';
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'document',
+          filePath,
+          filename: file.uri.pathSegments.isNotEmpty
+              ? file.uri.pathSegments.last
+              : 'documento.$extension',
+        ),
+      );
+
+      final streamedResponse =
+          await request.send().timeout(_timeout);
+
+      final response =
+          await http.Response.fromStream(streamedResponse).timeout(_timeout);
 
       dynamic decoded;
       try {
@@ -74,7 +69,9 @@ class DocumentAiService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         if (decoded is Map) {
           final explanation = decoded['explanation'];
-          if (explanation is String && explanation.trim().isNotEmpty) {
+
+          if (explanation is String &&
+              explanation.trim().isNotEmpty) {
             return explanation.trim();
           }
         }
@@ -85,11 +82,14 @@ class DocumentAiService {
       }
 
       if (decoded is Map && decoded['message'] is String) {
-        throw DocumentAiException(decoded['message'].toString());
+        throw DocumentAiException(
+          decoded['message'].toString(),
+        );
       }
 
       throw DocumentAiException(
-        'Analisi temporaneamente non disponibile (${response.statusCode}).',
+        'Analisi temporaneamente non disponibile '
+        '(${response.statusCode}).',
       );
     } on TimeoutException {
       throw const DocumentAiException(
@@ -102,6 +102,11 @@ class DocumentAiService {
         'Impossibile collegarsi al servizio di analisi in questo momento.',
       );
     }
+  }
+
+  // Manteniamo questo metodo per compatibilità con il codice RC 1.3.
+  Future<String> analyzeImage(String imagePath) {
+    return analyzeDocument(imagePath);
   }
 }
 
