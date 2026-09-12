@@ -1,9 +1,10 @@
-// SALUTE RISPONDE RC1.3.0 - BASE UNIFICATA
+// SALUTE RISPONDE BUILD 34 - MULTILINGUA COMPLETA + NUOVO BRAND
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,19 +21,20 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LanguageService.initialize();
   await NotificationService.instance.initialize();
-  runApp(const SaluteRispondeApp());
+  runApp(SaluteRispondeApp());
 }
 
 class SaluteRispondeApp extends StatelessWidget {
-  const SaluteRispondeApp({super.key});
+  SaluteRispondeApp({super.key});
 
-  static const navy = Color(0xFF0D2B45);
-  static const primary = Color(0xFF0E4D5A);
-  static const secondary = Color(0xFF00B4A6);
-  static const cyan = Color(0xFF6EF6F5);
-  static const soft = Color(0xFFF3F8FA);
-  static const surface = Colors.white;
-  static const text = Color(0xFF17313B);
+  static final navy = Color(0xFF174A43);
+  static final primary = Color(0xFF168C7C);
+  static final secondary = Color(0xFF40B89F);
+  static final cyan = Color(0xFFA8E6D8);
+  static final soft = Color(0xFFF5FBF8);
+  static final surface = Colors.white;
+  static final text = Color(0xFF243B36);
+  static final accent = Color(0xFFE53935);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class SaluteRispondeApp extends StatelessWidget {
       title: 'Salute Risponde',
       locale: LanguageService.locale,
       supportedLocales: LanguageService.supportedLocales,
-      localizationsDelegates: const [
+      localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -62,7 +64,7 @@ class SaluteRispondeApp extends StatelessWidget {
         colorScheme: scheme,
         scaffoldBackgroundColor: soft,
         fontFamily: 'Roboto',
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           backgroundColor: soft,
           foregroundColor: navy,
           elevation: 0,
@@ -102,18 +104,18 @@ class SaluteRispondeApp extends StatelessWidget {
           style: FilledButton.styleFrom(
             backgroundColor: primary,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
             ),
           ),
         ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: secondary,
           foregroundColor: Colors.white,
         ),
       ),
-      home: const HomePage(),
+      home: HomePage(),
         );
       },
     );
@@ -121,7 +123,7 @@ class SaluteRispondeApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   void _open(BuildContext context, Widget page) {
     Navigator.push(context, MaterialPageRoute(builder: (_) => page));
@@ -137,18 +139,18 @@ class HomePage extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Modalità collaudo'),
-        content: const Text(
-          'Attivare la modalità di collaudo interna con risposte illimitate?',
+        title: Text(LanguageService.uiText('Modalità collaudo')),
+        content: Text(
+          LanguageService.uiText('Attivare la modalità di collaudo interna con risposte illimitate?'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('ANNULLA'),
+            child: Text(LanguageService.uiText('ANNULLA')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('ATTIVA TESTER'),
+            child: Text(LanguageService.uiText('ATTIVA TESTER')),
           ),
         ],
       ),
@@ -160,7 +162,7 @@ class HomePage extends StatelessWidget {
     await prefs.setInt('salute_risponde_free_answers_used', 0);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Modalità collaudo attiva: risposte illimitate.')),
+      SnackBar(content: Text(LanguageService.uiText('Modalità collaudo attiva: risposte illimitate.'))),
     );
   }
 
@@ -169,18 +171,18 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+          padding: EdgeInsets.fromLTRB(18, 12, 18, 28),
           children: [
             Row(
               children: [
                 GestureDetector(
                   onLongPress: () => _activateTester(context),
-                  child: const _BrandWordmark(),
+                  child: _BrandWordmark(),
                 ),
-                const Spacer(),
+                Spacer(),
                 PopupMenuButton<String>(
                   tooltip: LanguageService.t('language'),
-                  icon: const Icon(Icons.language_rounded),
+                  icon: Icon(Icons.language_rounded),
                   onSelected: LanguageService.setLanguage,
                   itemBuilder: (context) => LanguageService.options
                       .map(
@@ -188,9 +190,9 @@ class HomePage extends StatelessWidget {
                           value: option.code,
                           child: Row(
                             children: [
-                              Text(option.flag, style: const TextStyle(fontSize: 20)),
-                              const SizedBox(width: 10),
-                              Text(option.nativeName),
+                              Text(option.flag, style: TextStyle(fontSize: 20)),
+                              SizedBox(width: 10),
+                              Text(LanguageService.optionName(option)),
                             ],
                           ),
                         ),
@@ -199,28 +201,28 @@ class HomePage extends StatelessWidget {
                 ),
                 IconButton(
                   tooltip: LanguageService.t('instructions'),
-                  onPressed: () => _open(context, const InstructionsPage()),
-                  icon: const Icon(Icons.info_outline_rounded),
+                  onPressed: () => _open(context, InstructionsPage()),
+                  icon: Icon(Icons.info_outline_rounded),
                 ),
                 IconButton.filledTonal(
                   tooltip: LanguageService.t('account'),
-                  onPressed: () => _open(context, const AccountPage()),
-                  icon: const Icon(Icons.person_outline_rounded),
+                  onPressed: () => _open(context, AccountPage()),
+                  icon: Icon(Icons.person_outline_rounded),
                 ),
               ],
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: 18),
             Container(
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [SaluteRispondeApp.navy, SaluteRispondeApp.primary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: Color(0x1F0D2B45),
+                    color: Color(0x1F174A43),
                     blurRadius: 24,
                     offset: Offset(0, 10),
                   ),
@@ -231,7 +233,7 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(22, 22, 22, 14),
+                    padding: EdgeInsets.fromLTRB(22, 22, 22, 14),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -243,29 +245,29 @@ class HomePage extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: 5),
                         Text(
                           LanguageService.t('home_help_today'),
                           style: TextStyle(
-                            color: Color(0xFFD8F7F5),
+                            color: Color(0xFFE9FFF7),
                             fontSize: 15.5,
                           ),
                         ),
-                        const SizedBox(height: 18),
+                        SizedBox(height: 18),
                         SizedBox(
                           width: double.infinity,
                           child: FilledButton.icon(
                             onPressed: () =>
-                                _open(context, const MedicalChatPage()),
+                                _open(context, MedicalChatPage()),
                             style: FilledButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: SaluteRispondeApp.navy,
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 18,
                                 vertical: 16,
                               ),
                             ),
-                            icon: const Icon(Icons.chat_bubble_outline_rounded),
+                            icon: Icon(Icons.chat_bubble_outline_rounded),
                             label: Text(
                               LanguageService.t('ask_question'),
                               style: TextStyle(fontWeight: FontWeight.w800),
@@ -277,10 +279,10 @@ class HomePage extends StatelessWidget {
                   ),
                   Container(
                     height: 168,
-                    padding: const EdgeInsets.fromLTRB(22, 18, 10, 18),
-                    decoration: const BoxDecoration(
+                    padding: EdgeInsets.fromLTRB(22, 18, 10, 18),
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color(0xFF123D59), Color(0xFF0B746F)],
+                        colors: [Color(0xFF1B675D), Color(0xFF40B89F)],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
@@ -305,7 +307,7 @@ class HomePage extends StatelessWidget {
                               Text(
                                 LanguageService.t('simple_tools'),
                                 style: TextStyle(
-                                  color: Color(0xFFD8F7F5),
+                                  color: Color(0xFFE9FFF7),
                                   fontSize: 14,
                                   height: 1.3,
                                 ),
@@ -314,7 +316,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         Image.asset(
-                          'assets/branding/salute_risponde_icon.png',
+                          'assets/branding/saluterisponde_icon_master.png',
                           width: 118,
                           height: 118,
                           fit: BoxFit.contain,
@@ -325,7 +327,7 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Text(
               LanguageService.t('everything_you_need'),
               style: TextStyle(
@@ -334,11 +336,11 @@ class HomePage extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               childAspectRatio: 0.80,
@@ -347,41 +349,41 @@ class HomePage extends StatelessWidget {
                   icon: Icons.calendar_month_rounded,
                   title: LanguageService.t('agenda_health'),
                   subtitle: LanguageService.t('appointments_visits'),
-                  onTap: () => _open(context, const AgendaPage()),
+                  onTap: () => _open(context, AgendaPage()),
                 ),
                 _ServiceCard(
                   icon: Icons.description_outlined,
                   title: LanguageService.t('tests_reports'),
                   subtitle: LanguageService.t('your_documents'),
-                  onTap: () => _open(context, const DocumentsPage()),
+                  onTap: () => _open(context, DocumentsPage()),
                 ),
                 _ServiceCard(
                   icon: Icons.medication_outlined,
                   title: LanguageService.t('medicine_reminders'),
                   subtitle: LanguageService.t('therapies_control'),
-                  onTap: () => _open(context, const MedicinesPage()),
+                  onTap: () => _open(context, MedicinesPage()),
                 ),
                 _ServiceCard(
                   icon: Icons.phone_in_talk_rounded,
                   title: LanguageService.t('useful_numbers'),
                   subtitle: LanguageService.t('quick_contacts'),
-                  onTap: () => _open(context, const UsefulNumbersPage()),
+                  onTap: () => _open(context, UsefulNumbersPage()),
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _ActionTile(
               icon: Icons.workspace_premium_outlined,
               title: LanguageService.t('plans_title'),
               subtitle: LanguageService.t('choose_plan'),
-              onTap: () => _open(context, const PlansPage()),
+              onTap: () => _open(context, PlansPage()),
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: 18),
             Container(
               height: 180,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(28),
-                image: const DecorationImage(
+                image: DecorationImage(
                   image: AssetImage('assets/branding/care_reassuring.png'),
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
@@ -390,10 +392,10 @@ class HomePage extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               child: Container(
                 alignment: Alignment.bottomLeft,
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0x00102E46), Color(0xE6102E46)],
+                    colors: [Color(0x00174A43), Color(0xE6174A43)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -408,31 +410,31 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            const _SafetyCard(),
-            const SizedBox(height: 20),
+            SizedBox(height: 16),
+            _SafetyCard(),
+            SizedBox(height: 20),
             Center(
               child: Text(
                 '© 2026 SaluteRisponde',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFF6B7F87),
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5),
             Center(
               child: InkWell(
                 onTap: _openKol,
                 borderRadius: BorderRadius.circular(10),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   child: Text(
                     LanguageService.t('powered_by'),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: SaluteRispondeApp.primary,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w800,
@@ -451,12 +453,12 @@ class HomePage extends StatelessWidget {
 
 
 class InstructionsPage extends StatelessWidget {
-  const InstructionsPage({super.key});
+  InstructionsPage({super.key});
 
   Widget _section(IconData icon, String title, String body) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(18),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -464,28 +466,28 @@ class InstructionsPage extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: const Color(0xFFE7F7F6),
+                color: Color(0xFFE7F7F6),
                 borderRadius: BorderRadius.circular(13),
               ),
               child: Icon(icon, color: SaluteRispondeApp.primary),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: SaluteRispondeApp.navy,
                       fontWeight: FontWeight.w900,
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     body,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: SaluteRispondeApp.text,
                       fontSize: 14.5,
                       height: 1.42,
@@ -506,41 +508,41 @@ class InstructionsPage extends StatelessWidget {
       appBar: AppBar(title: Text(LanguageService.t('instructions'))),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(18, 10, 18, 28),
+          padding: EdgeInsets.fromLTRB(18, 10, 18, 28),
           children: [
             Text(
               LanguageService.t('instructions_intro'),
-              style: const TextStyle(
+              style: TextStyle(
                 color: SaluteRispondeApp.text,
                 fontSize: 15,
                 height: 1.45,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _section(
               Icons.chat_bubble_outline_rounded,
               LanguageService.t('instructions_chat_title'),
               LanguageService.t('instructions_chat_body'),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _section(
               Icons.description_outlined,
               LanguageService.t('instructions_docs_title'),
               LanguageService.t('instructions_docs_body'),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _section(
               Icons.calendar_month_rounded,
               LanguageService.t('instructions_agenda_title'),
               LanguageService.t('instructions_agenda_body'),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _section(
               Icons.medication_outlined,
               LanguageService.t('instructions_meds_title'),
               LanguageService.t('instructions_meds_body'),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _section(
               Icons.health_and_safety_outlined,
               LanguageService.t('instructions_safety_title'),
@@ -555,7 +557,7 @@ class InstructionsPage extends StatelessWidget {
 
 
 class _BrandWordmark extends StatelessWidget {
-  const _BrandWordmark();
+  _BrandWordmark();
 
   @override
   Widget build(BuildContext context) {
@@ -563,13 +565,13 @@ class _BrandWordmark extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Image.asset(
-          'assets/branding/salute_risponde_icon.png',
+          'assets/branding/saluterisponde_icon_master.png',
           width: 48,
           height: 48,
           fit: BoxFit.contain,
         ),
-        const SizedBox(width: 9),
-        const Text(
+        SizedBox(width: 9),
+        Text(
           'Salute\nRisponde',
           style: TextStyle(
             color: SaluteRispondeApp.navy,
@@ -589,7 +591,7 @@ class _ServiceCard extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const _ServiceCard({
+  _ServiceCard({
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -605,7 +607,7 @@ class _ServiceCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -613,7 +615,7 @@ class _ServiceCard extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     colors: [
                       SaluteRispondeApp.secondary,
                       SaluteRispondeApp.primary,
@@ -623,24 +625,24 @@ class _ServiceCard extends StatelessWidget {
                 ),
                 child: Icon(icon, color: Colors.white),
               ),
-              const Spacer(),
+              Spacer(),
               Text(
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   color: SaluteRispondeApp.navy,
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
                   height: 1.15,
                 ),
               ),
-              const SizedBox(height: 3),
+              SizedBox(height: 3),
               Text(
                 subtitle,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFF6B7F87),
                   fontSize: 12.5,
                   height: 1.2,
@@ -660,7 +662,7 @@ class _ActionTile extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const _ActionTile({
+  _ActionTile({
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -671,25 +673,25 @@ class _ActionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Container(
           width: 46,
           height: 46,
           decoration: BoxDecoration(
-            color: const Color(0xFFE7F7F6),
+            color: Color(0xFFE7F7F6),
             borderRadius: BorderRadius.circular(14),
           ),
           child: Icon(icon, color: SaluteRispondeApp.primary),
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             color: SaluteRispondeApp.navy,
             fontWeight: FontWeight.w900,
           ),
         ),
         subtitle: Text(subtitle),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 17),
+        trailing: Icon(Icons.arrow_forward_ios_rounded, size: 17),
         onTap: onTap,
       ),
     );
@@ -697,15 +699,15 @@ class _ActionTile extends StatelessWidget {
 }
 
 class MedicalChatPage extends StatefulWidget {
-  const MedicalChatPage({super.key});
+  MedicalChatPage({super.key});
 
   @override
   State<MedicalChatPage> createState() => _MedicalChatPageState();
 }
 
 class _MedicalChatPageState extends State<MedicalChatPage> {
-  static const int _freeLimit = 3;
-  static const String _freeCountKey = 'salute_risponde_free_answers_used';
+  static int _freeLimit = 3;
+  static String _freeCountKey = 'salute_risponde_free_answers_used';
 
   final _service = MedicalAiService();
   final _storage = AppStorageService();
@@ -714,11 +716,11 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
   final _chatImagePicker = ImagePicker();
   PlatformFile? _chatAttachment;
 
-  final List<_ChatMessage> _messages = const [
+  final List<_ChatMessage> _messages = [
     _ChatMessage(
       user: false,
       text:
-          'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.',
+          LanguageService.uiText('Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.'),
     ),
   ].toList();
 
@@ -757,7 +759,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       if (!mounted || !_scrollController.hasClients) return;
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 280),
+        duration: Duration(milliseconds: 280),
         curve: Curves.easeOut,
       );
     });
@@ -771,27 +773,27 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       showDragHandle: true,
       builder: (sheetContext) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(22, 8, 22, 22),
+          padding: EdgeInsets.fromLTRB(22, 8, 22, 22),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
+              Icon(
                 Icons.workspace_premium_rounded,
                 size: 42,
                 color: SaluteRispondeApp.primary,
               ),
-              const SizedBox(height: 12),
-              const Text(
-                'Hai utilizzato le 3 risposte gratuite',
+              SizedBox(height: 12),
+              Text(
+                LanguageService.uiText('Hai utilizzato le 3 risposte gratuite'),
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.',
+              SizedBox(height: 8),
+              Text(
+                LanguageService.uiText('Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.'),
                 style: TextStyle(fontSize: 16, height: 1.4),
               ),
-              const SizedBox(height: 18),
+              SizedBox(height: 18),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
@@ -799,18 +801,18 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                     Navigator.pop(sheetContext);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const PlansPage()),
+                      MaterialPageRoute(builder: (_) => PlansPage()),
                     );
                   },
-                  child: const Text('VEDI PLUS E PRO'),
+                  child: Text(LanguageService.uiText('VEDI PLUS E PRO')),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () => Navigator.pop(sheetContext),
-                  child: const Text('NON ORA'),
+                  child: Text(LanguageService.uiText('NON ORA')),
                 ),
               ),
             ],
@@ -832,7 +834,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     if (size < 1 || size > 10 * 1024 * 1024) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('La foto deve avere una dimensione massima di 10 MB.')),
+          SnackBar(content: Text(LanguageService.uiText('La foto deve avere una dimensione massima di 10 MB.'))),
         );
       }
       return;
@@ -860,7 +862,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     if (size < 1 || size > 10 * 1024 * 1024) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('L’immagine deve avere una dimensione massima di 10 MB.')),
+          SnackBar(content: Text(LanguageService.uiText('L’immagine deve avere una dimensione massima di 10 MB.'))),
         );
       }
       return;
@@ -879,7 +881,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
   Future<void> _pickChatPdf() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: const ['pdf'],
+      allowedExtensions: ['pdf'],
     );
     if (result == null || result.files.isEmpty) return;
 
@@ -887,7 +889,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     if (file.path == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Non riesco ad accedere al PDF selezionato.')),
+          SnackBar(content: Text(LanguageService.uiText('Non riesco ad accedere al PDF selezionato.'))),
         );
       }
       return;
@@ -895,7 +897,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     if (file.size < 1 || file.size > 10 * 1024 * 1024) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Il PDF deve avere una dimensione massima di 10 MB.')),
+          SnackBar(content: Text(LanguageService.uiText('Il PDF deve avere una dimensione massima di 10 MB.'))),
         );
       }
       return;
@@ -911,36 +913,36 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       showDragHandle: true,
       builder: (sheetContext) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 18),
+          padding: EdgeInsets.fromLTRB(16, 4, 16, 18),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const ListTile(
+              ListTile(
                 title: Text(
-                  'Allega alla domanda',
+                  LanguageService.uiText('Allega alla domanda'),
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
                 ),
-                subtitle: Text('Foto, immagine dalla galleria oppure PDF.'),
+                subtitle: Text(LanguageService.uiText('Foto, immagine dalla galleria oppure PDF.')),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_camera_outlined),
-                title: const Text('Scatta una foto'),
+                leading: Icon(Icons.photo_camera_outlined),
+                title: Text(LanguageService.uiText('Scatta una foto')),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _takeChatPhoto();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library_outlined),
-                title: const Text('Scegli dalla galleria'),
+                leading: Icon(Icons.photo_library_outlined),
+                title: Text(LanguageService.uiText('Scegli dalla galleria')),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _pickChatGallery();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.picture_as_pdf_outlined),
-                title: const Text('Allega un PDF'),
+                leading: Icon(Icons.picture_as_pdf_outlined),
+                title: Text(LanguageService.uiText('Allega un PDF')),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _pickChatPdf();
@@ -966,13 +968,13 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
 
     if (attachment != null && attachment.path == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('L’allegato non è più disponibile. Selezionalo di nuovo.')),
+        SnackBar(content: Text(LanguageService.uiText('L’allegato non è più disponibile. Selezionalo di nuovo.'))),
       );
       return;
     }
 
     final message = typedText.isEmpty
-        ? 'Analizza e spiegami questo allegato sanitario.'
+        ? LanguageService.uiText('Analizza e spiegami questo allegato sanitario.')
         : typedText;
 
     final history = _messages
@@ -992,17 +994,17 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       _chatAttachment = null;
       _sending = true;
       _statusMessage = attachment == null
-          ? 'Salute Risponde sta rispondendo…'
-          : 'Salute Risponde sta analizzando l’allegato…';
+          ? LanguageService.uiText('Salute Risponde sta rispondendo…')
+          : LanguageService.uiText('Salute Risponde sta analizzando l’allegato…');
     });
     _scrollToBottom();
 
-    Future<void>.delayed(const Duration(seconds: 15), () {
+    Future<void>.delayed(Duration(seconds: 15), () {
       if (mounted && _sending) {
         setState(() {
           _statusMessage = attachment == null
-              ? 'Salute Risponde sta elaborando la risposta, ancora qualche secondo…'
-              : 'Analisi dell’allegato in corso, ancora qualche secondo…';
+              ? LanguageService.uiText('Salute Risponde sta elaborando la risposta, ancora qualche secondo…')
+              : LanguageService.uiText('Analisi dell’allegato in corso, ancora qualche secondo…');
         });
         _scrollToBottom();
       }
@@ -1039,7 +1041,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       }
 
       if (_plan == 'FREE' && _freeUsed >= _freeLimit) {
-        await Future<void>.delayed(const Duration(milliseconds: 500));
+        await Future<void>.delayed(Duration(milliseconds: 500));
         if (mounted) await _showUpgrade();
       }
     } on MedicalAiException catch (e) {
@@ -1057,7 +1059,7 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
         _messages.add(
           _ChatMessage(
             user: false,
-            text: 'Errore app Salute Risponde: ${e.runtimeType}. Riprova.',
+            text: LanguageService.appError(e.runtimeType.toString()),
           ),
         );
         _statusMessage = null;
@@ -1090,13 +1092,13 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
         title: Row(
           children: [
             Image.asset(
-              'assets/branding/salute_risponde_icon.png',
+              'assets/branding/saluterisponde_icon_master.png',
               width: 34,
               height: 34,
               fit: BoxFit.cover,
             ),
-            const SizedBox(width: 10),
-            const Text('Fai una domanda'),
+            SizedBox(width: 10),
+            Text(LanguageService.uiText('Fai una domanda')),
           ],
         ),
       ),
@@ -1105,38 +1107,38 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
           if (tester)
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              margin: EdgeInsets.fromLTRB(16, 8, 16, 4),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFE3F7F2),
+                color: Color(0xFFE3F7F2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Text(
-                'COLLAUDO • risposte illimitate',
+              child: Text(
+                LanguageService.uiText('COLLAUDO • risposte illimitate'),
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
           if (free)
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              margin: EdgeInsets.fromLTRB(16, 8, 16, 4),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F5F8),
+                color: Color(0xFFEAF8F4),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
                 _remaining > 0
-                    ? 'Piano FREE • $_remaining ${_remaining == 1 ? 'risposta rimasta' : 'risposte rimaste'}'
-                    : 'Piano FREE • limite gratuito raggiunto',
-                style: const TextStyle(fontWeight: FontWeight.w800),
+                    ? LanguageService.freeRemaining(_remaining)
+                    : LanguageService.freeLimitReached(),
+                style: TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
           if (free && _remaining == 0)
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              padding: const EdgeInsets.all(16),
+              margin: EdgeInsets.fromLTRB(16, 8, 16, 8),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18),
@@ -1145,19 +1147,19 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Hai terminato le 3 risposte gratuite',
+                  Text(
+                    LanguageService.uiText('Hai terminato le 3 risposte gratuite'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
                       color: SaluteRispondeApp.text,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Continua con Salute Risponde scegliendo PLUS o PRO.',
+                  SizedBox(height: 6),
+                  Text(
+                    LanguageService.uiText('Continua con Salute Risponde scegliendo PLUS o PRO.'),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
@@ -1165,22 +1167,22 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => const PlansPage()),
+                              MaterialPageRoute(builder: (_) => PlansPage()),
                             );
                           },
-                          child: const Text('PLUS'),
+                          child: Text('PLUS'),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       Expanded(
                         child: FilledButton.tonal(
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => const PlansPage()),
+                              MaterialPageRoute(builder: (_) => PlansPage()),
                             );
                           },
-                          child: const Text('PRO'),
+                          child: Text('PRO'),
                         ),
                       ),
                     ],
@@ -1191,32 +1193,32 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (_, i) {
                 final m = _messages[i];
                 return Align(
                   alignment: m.user ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    constraints: const BoxConstraints(maxWidth: 330),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(14),
+                    constraints: BoxConstraints(maxWidth: 330),
+                    margin: EdgeInsets.only(bottom: 10),
+                    padding: EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: m.user
                           ? SaluteRispondeApp.primary
                           : Colors.white,
                       borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(22),
-                        topRight: const Radius.circular(22),
+                        topLeft: Radius.circular(22),
+                        topRight: Radius.circular(22),
                         bottomLeft: Radius.circular(m.user ? 22 : 6),
                         bottomRight: Radius.circular(m.user ? 6 : 22),
                       ),
                       border: m.user
                           ? null
-                          : Border.all(color: const Color(0xFFE2EDF0)),
-                      boxShadow: const [
+                          : Border.all(color: Color(0xFFE2EEE9)),
+                      boxShadow: [
                         BoxShadow(
-                          color: Color(0x0D0D2B45),
+                          color: Color(0x0D174A43),
                           blurRadius: 10,
                           offset: Offset(0, 3),
                         ),
@@ -1236,19 +1238,19 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
           ),
           if (_sending)
             Padding(
-              padding: const EdgeInsets.fromLTRB(18, 4, 18, 6),
+              padding: EdgeInsets.fromLTRB(18, 4, 18, 6),
               child: Row(
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      _statusMessage ?? 'Salute Risponde sta rispondendo…',
-                      style: const TextStyle(fontWeight: FontWeight.w700),
+                      _statusMessage ?? LanguageService.uiText('Salute Risponde sta rispondendo…'),
+                      style: TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ],
@@ -1257,19 +1259,19 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
           SafeArea(
             top: false,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (_chatAttachment != null)
                     Container(
                       width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.fromLTRB(12, 8, 6, 8),
+                      margin: EdgeInsets.only(bottom: 8),
+                      padding: EdgeInsets.fromLTRB(12, 8, 6, 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE8F5F8),
+                        color: Color(0xFFEAF8F4),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFFD3E7EC)),
+                        border: Border.all(color: Color(0xFFD5ECE6)),
                       ),
                       child: Row(
                         children: [
@@ -1279,21 +1281,21 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                                 : Icons.image_outlined,
                             color: SaluteRispondeApp.primary,
                           ),
-                          const SizedBox(width: 9),
+                          SizedBox(width: 9),
                           Expanded(
                             child: Text(
                               _chatAttachment!.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontWeight: FontWeight.w800),
+                              style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                           ),
                           IconButton(
-                            tooltip: 'Rimuovi allegato',
+                            tooltip: LanguageService.uiText('Rimuovi allegato'),
                             onPressed: _sending
                                 ? null
                                 : () => setState(() => _chatAttachment = null),
-                            icon: const Icon(Icons.close_rounded),
+                            icon: Icon(Icons.close_rounded),
                           ),
                         ],
                       ),
@@ -1304,19 +1306,19 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                         width: 48,
                         height: 52,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE8F5F8),
+                          color: Color(0xFFEAF8F4),
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: IconButton(
-                          tooltip: 'Allega foto o PDF',
+                          tooltip: LanguageService.uiText('Allega foto o PDF'),
                           color: SaluteRispondeApp.primary,
                           onPressed: _sending || (free && _freeUsed >= _freeLimit)
                               ? null
                               : _chooseChatAttachment,
-                          icon: const Icon(Icons.attach_file_rounded),
+                          icon: Icon(Icons.attach_file_rounded),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Expanded(
                         child: TextField(
                           controller: _controller,
@@ -1325,18 +1327,18 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                           maxLines: 5,
                           decoration: InputDecoration(
                             hintText: free && _freeUsed >= _freeLimit
-                                ? 'Scegli PLUS o PRO per continuare'
-                                : 'Scrivi una domanda o allega un esame...',
+                                ? LanguageService.uiText('Scegli PLUS o PRO per continuare')
+                                : LanguageService.uiText('Scrivi una domanda o allega un esame...'),
                             border: InputBorder.none,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
                         width: 52,
                         height: 52,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             colors: [
                               SaluteRispondeApp.secondary,
                               SaluteRispondeApp.primary,
@@ -1373,11 +1375,11 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
 class _ChatMessage {
   final bool user;
   final String text;
-  const _ChatMessage({required this.user, required this.text});
+  _ChatMessage({required this.user, required this.text});
 }
 
 class DocumentsPage extends StatefulWidget {
-  const DocumentsPage({super.key});
+  DocumentsPage({super.key});
 
   @override
   State<DocumentsPage> createState() => _DocumentsPageState();
@@ -1437,29 +1439,29 @@ class _DocumentsPageState extends State<DocumentsPage> {
       showDragHandle: true,
       builder: (sheetContext) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 4, 18, 20),
+          padding: EdgeInsets.fromLTRB(18, 4, 18, 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const ListTile(
+              ListTile(
                 title: Text(
-                  'Aggiungi un documento',
+                  LanguageService.uiText('Aggiungi un documento'),
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
                 ),
-                subtitle: Text('Fotografa il documento oppure scegli un file già salvato.'),
+                subtitle: Text(LanguageService.uiText('Fotografa il documento oppure scegli un file già salvato.')),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_camera_outlined),
-                title: const Text('Scatta una foto'),
+                leading: Icon(Icons.photo_camera_outlined),
+                title: Text(LanguageService.uiText('Scatta una foto')),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _takePhoto();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.folder_open_outlined),
-                title: const Text('Scegli dalla galleria o dai file'),
-                subtitle: const Text('PDF, JPG, PNG o WEBP'),
+                leading: Icon(Icons.folder_open_outlined),
+                title: Text(LanguageService.uiText('Scegli dalla galleria o dai file')),
+                subtitle: Text(LanguageService.uiText('PDF, JPG, PNG o WEBP')),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _choose();
@@ -1475,7 +1477,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
   Future<void> _savePending() async {
     final file = _pending;
     if (file == null || file.path == null) {
-      _snack('Seleziona prima un documento.');
+      _snack(LanguageService.uiText('Seleziona prima un documento.'));
       return;
     }
 
@@ -1492,9 +1494,9 @@ class _DocumentsPageState extends State<DocumentsPage> {
         _pending = null;
         _selectedIndex = _documents.length - 1;
       });
-      _snack('Documento salvato nel tuo archivio.');
+      _snack(LanguageService.uiText('Documento salvato nel tuo archivio.'));
     } catch (_) {
-      _snack('Non è stato possibile salvare il documento.');
+      _snack(LanguageService.uiText('Non è stato possibile salvare il documento.'));
     }
   }
 
@@ -1503,10 +1505,10 @@ class _DocumentsPageState extends State<DocumentsPage> {
 
     final item = _documents[index];
     final path = item['path']?.toString() ?? '';
-    final name = item['name']?.toString() ?? 'Documento';
+    final name = item['name']?.toString() ?? LanguageService.uiText('Documento');
 
     if (path.isEmpty || !await File(path).exists()) {
-      _snack('Il file non è più disponibile sul dispositivo.');
+      _snack(LanguageService.uiText('Il file non è più disponibile sul dispositivo.'));
       return;
     }
 
@@ -1532,12 +1534,12 @@ class _DocumentsPageState extends State<DocumentsPage> {
       } else {
         final result = await OpenFilex.open(path);
         if (result.type != ResultType.done && mounted) {
-          _snack('Non riesco ad aprire questo PDF con le app disponibili.');
+          _snack(LanguageService.uiText('Non riesco ad aprire questo PDF con le app disponibili.'));
         }
       }
     } catch (_) {
       if (mounted) {
-        _snack('Errore durante l’apertura del documento.');
+        _snack(LanguageService.uiText('Errore durante l’apertura del documento.'));
       }
     } finally {
       if (mounted) {
@@ -1565,7 +1567,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
 
   Future<void> _analyzeSelected() async {
     if (_selectedIndex == null) {
-      _snack('Seleziona prima un documento.');
+      _snack(LanguageService.uiText('Seleziona prima un documento.'));
       return;
     }
 
@@ -1573,25 +1575,25 @@ class _DocumentsPageState extends State<DocumentsPage> {
     final path = item['path']?.toString() ?? '';
 
     if (path.isEmpty || !await File(path).exists()) {
-      _snack('Il file non è più disponibile sul dispositivo.');
+      _snack(LanguageService.uiText('Il file non è più disponibile sul dispositivo.'));
       return;
     }
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Analizzare il documento?'),
-        content: const Text(
-          'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.',
+        title: Text(LanguageService.uiText('Analizzare il documento?')),
+        content: Text(
+          LanguageService.uiText('Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('ANNULLA'),
+            child: Text(LanguageService.uiText('ANNULLA')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('ANALIZZA'),
+            child: Text(LanguageService.uiText('ANALIZZA')),
           ),
         ],
       ),
@@ -1607,7 +1609,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
         context,
         MaterialPageRoute(
           builder: (_) => _DocumentAnalysisPage(
-            documentName: item['name']?.toString() ?? 'Documento',
+            documentName: item['name']?.toString() ?? LanguageService.uiText('Documento'),
             explanation: explanation,
           ),
         ),
@@ -1615,7 +1617,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
     } on DocumentAiException catch (e) {
       if (mounted) _snack(e.message);
     } catch (_) {
-      if (mounted) _snack('Non è stato possibile analizzare il documento.');
+      if (mounted) _snack(LanguageService.uiText('Non è stato possibile analizzare il documento.'));
     } finally {
       if (mounted) setState(() => _analyzing = false);
     }
@@ -1624,41 +1626,41 @@ class _DocumentsPageState extends State<DocumentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Esami e referti')),
+      appBar: AppBar(title: Text(LanguageService.uiText('Esami e referti'))),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         children: [
           FilledButton.icon(
             onPressed: _chooseSource,
-            icon: const Icon(Icons.add_a_photo_outlined),
-            label: const Text('Fotografa o scegli un documento'),
+            icon: Icon(Icons.add_a_photo_outlined),
+            label: Text(LanguageService.uiText('Fotografa o scegli un documento')),
           ),
           if (_pending != null) ...[
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.description_outlined),
+                leading: Icon(Icons.description_outlined),
                 title: Text(_pending!.name),
-                subtitle: const Text('Pronto per essere salvato'),
+                subtitle: Text(LanguageService.uiText('Pronto per essere salvato')),
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
                 onPressed: _savePending,
-                icon: const Icon(Icons.save_outlined),
-                label: const Text('Salva nel mio archivio'),
+                icon: Icon(Icons.save_outlined),
+                label: Text(LanguageService.uiText('Salva nel mio archivio')),
               ),
             ),
           ],
-          const SizedBox(height: 20),
-          const Text(
-            'I miei documenti',
+          SizedBox(height: 20),
+          Text(
+            LanguageService.uiText('I miei documenti'),
             style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           if (_documents.isEmpty)
-            const Text('Nessun documento salvato.')
+            Text(LanguageService.uiText('Nessun documento salvato.'))
           else
             ...List.generate(_documents.length, (i) {
               final item = _documents[i];
@@ -1677,47 +1679,47 @@ class _DocumentsPageState extends State<DocumentsPage> {
                     selected ? Icons.check_circle : Icons.folder_copy_outlined,
                     color: SaluteRispondeApp.primary,
                   ),
-                  title: Text(item['name']?.toString() ?? 'Documento'),
+                  title: Text(item['name']?.toString() ?? LanguageService.uiText('Documento')),
                   subtitle: Text(
                     selected
-                        ? 'Selezionato • usa Apri per visualizzarlo'
-                        : 'Tocca per selezionare • usa Apri per visualizzarlo',
+                        ? LanguageService.uiText('Selezionato • usa Apri per visualizzarlo')
+                        : LanguageService.uiText('Tocca per selezionare • usa Apri per visualizzarlo'),
                   ),
                   trailing: Wrap(
                     spacing: 0,
                     children: [
                       IconButton(
-                        tooltip: 'Apri',
+                        tooltip: LanguageService.uiText('Apri'),
                         onPressed: _openingIndex == null ? () => _openDocument(i) : null,
                         icon: _openingIndex == i
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Icon(Icons.open_in_new),
+                            : Icon(Icons.open_in_new),
                       ),
                       IconButton(
-                        tooltip: 'Elimina',
+                        tooltip: LanguageService.uiText('Elimina'),
                         onPressed: () => _delete(i),
-                        icon: const Icon(Icons.delete_outline),
+                        icon: Icon(Icons.delete_outline),
                       ),
                     ],
                   ),
                 ),
               );
             }),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           OutlinedButton.icon(
             onPressed: _selectedIndex == null || _analyzing ? null : _analyzeSelected,
             icon: _analyzing
-                ? const SizedBox(
+                ? SizedBox(
                     width: 19,
                     height: 19,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Icon(Icons.auto_awesome),
-            label: Text(_analyzing ? 'Analisi in corso…' : 'Analizza e spiegami'),
+                : Icon(Icons.auto_awesome),
+            label: Text(_analyzing ? LanguageService.uiText('Analisi in corso…') : LanguageService.uiText('Analizza e spiegami')),
           ),
         ],
       ),
@@ -1729,7 +1731,7 @@ class _DocumentAnalysisPage extends StatelessWidget {
   final String documentName;
   final String explanation;
 
-  const _DocumentAnalysisPage({
+  _DocumentAnalysisPage({
     required this.documentName,
     required this.explanation,
   });
@@ -1737,27 +1739,34 @@ class _DocumentAnalysisPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Spiegazione del documento')),
+      appBar: AppBar(
+        title: Text(
+          LanguageService.uiText('Spiegazione del documento'),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+        ),
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(18),
         children: [
           Text(
             documentName,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(18),
+              padding: EdgeInsets.all(18),
               child: SelectableText(
                 explanation.replaceAll('**', ''),
-                style: const TextStyle(fontSize: 16, height: 1.48),
+                style: TextStyle(fontSize: 16, height: 1.48),
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          const Text(
-            'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.',
+          SizedBox(height: 12),
+          Text(
+            LanguageService.uiText('Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.'),
             style: TextStyle(color: Colors.black54, height: 1.4),
           ),
         ],
@@ -1771,7 +1780,7 @@ class _ImagePreviewPage extends StatelessWidget {
   final String filePath;
   final String title;
 
-  const _ImagePreviewPage({
+  _ImagePreviewPage({
     required this.filePath,
     required this.title,
   });
@@ -1792,10 +1801,10 @@ class _ImagePreviewPage extends StatelessWidget {
           child: Image.file(
             File(filePath),
             fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) => const Padding(
+            errorBuilder: (_, __, ___) => Padding(
               padding: EdgeInsets.all(24),
               child: Text(
-                'Impossibile visualizzare questa immagine.',
+                LanguageService.uiText('Impossibile visualizzare questa immagine.'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -1807,7 +1816,7 @@ class _ImagePreviewPage extends StatelessWidget {
 }
 
 class AgendaPage extends StatefulWidget {
-  const AgendaPage({super.key});
+  AgendaPage({super.key});
 
   @override
   State<AgendaPage> createState() => _AgendaPageState();
@@ -1831,7 +1840,7 @@ class _AgendaPageState extends State<AgendaPage> {
   Future<void> _add() async {
     final result = await Navigator.push<_AppointmentDraft>(
       context,
-      MaterialPageRoute(builder: (_) => const AppointmentEditorPage()),
+      MaterialPageRoute(builder: (_) => AppointmentEditorPage()),
     );
     if (result == null) return;
 
@@ -1850,7 +1859,7 @@ class _AgendaPageState extends State<AgendaPage> {
     if (!mounted) return;
     setState(() {});
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Appuntamento salvato.')),
+      SnackBar(content: Text(LanguageService.uiText('Appuntamento salvato.'))),
     );
   }
 
@@ -1865,39 +1874,39 @@ class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Agenda Salute')),
+      appBar: AppBar(title: Text(LanguageService.uiText('Agenda Salute'))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _add,
-        icon: const Icon(Icons.add),
-        label: const Text('Nuova visita'),
+        icon: Icon(Icons.add),
+        label: Text(LanguageService.uiText('Nuova visita')),
       ),
       body: _appointments.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
                 padding: EdgeInsets.all(30),
                 child: Text(
-                  'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.',
+                  LanguageService.uiText('Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.'),
                   textAlign: TextAlign.center,
                 ),
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               itemCount: _appointments.length,
               itemBuilder: (_, i) {
                 final item = _appointments[i];
                 final dt = DateTime.tryParse(item['date']?.toString() ?? '');
                 return Card(
                   child: ListTile(
-                    leading: const Icon(
+                    leading: Icon(
                       Icons.event_available,
                       color: SaluteRispondeApp.primary,
                     ),
-                    title: Text(item['title']?.toString() ?? 'Visita'),
+                    title: Text(item['title']?.toString() ?? LanguageService.uiText('Visita')),
                     subtitle: Text(dt == null ? '' : _formatDateTime(dt)),
                     trailing: IconButton(
                       onPressed: () => _delete(i),
-                      icon: const Icon(Icons.delete_outline),
+                      icon: Icon(Icons.delete_outline),
                     ),
                   ),
                 );
@@ -1908,7 +1917,7 @@ class _AgendaPageState extends State<AgendaPage> {
 }
 
 class AppointmentEditorPage extends StatefulWidget {
-  const AppointmentEditorPage({super.key});
+  AppointmentEditorPage({super.key});
 
   @override
   State<AppointmentEditorPage> createState() => _AppointmentEditorPageState();
@@ -1916,8 +1925,8 @@ class AppointmentEditorPage extends StatefulWidget {
 
 class _AppointmentEditorPageState extends State<AppointmentEditorPage> {
   final _title = TextEditingController();
-  DateTime _date = DateTime.now().add(const Duration(days: 1));
-  TimeOfDay _time = const TimeOfDay(hour: 10, minute: 0);
+  DateTime _date = DateTime.now().add(Duration(days: 1));
+  TimeOfDay _time = TimeOfDay(hour: 10, minute: 0);
 
   @override
   void dispose() {
@@ -1929,7 +1938,7 @@ class _AppointmentEditorPageState extends State<AppointmentEditorPage> {
     final title = _title.text.trim();
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Inserisci il tipo di visita o lo specialista.')),
+        SnackBar(content: Text(LanguageService.uiText('Inserisci il tipo di visita o lo specialista.'))),
       );
       return;
     }
@@ -1951,45 +1960,45 @@ class _AppointmentEditorPageState extends State<AppointmentEditorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nuova visita')),
+      appBar: AppBar(title: Text(LanguageService.uiText('Nuova visita'))),
       body: ListView(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(18),
         children: [
           TextField(
             controller: _title,
-            decoration: const InputDecoration(
-              labelText: 'Visita / specialista',
-              hintText: 'Es. Dentista',
+            decoration: InputDecoration(
+              labelText: LanguageService.uiText('Visita / specialista'),
+              hintText: LanguageService.uiText('Es. Dentista'),
               border: OutlineInputBorder(),
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           ListTile(
-            leading: const Icon(Icons.calendar_today),
+            leading: Icon(Icons.calendar_today),
             title: Text('${_date.day}/${_date.month}/${_date.year}'),
             onTap: () async {
               final picked = await showDatePicker(
                 context: context,
                 firstDate: DateTime.now(),
-                lastDate: DateTime.now().add(const Duration(days: 3650)),
+                lastDate: DateTime.now().add(Duration(days: 3650)),
                 initialDate: _date,
               );
               if (picked != null) setState(() => _date = picked);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.schedule),
+            leading: Icon(Icons.schedule),
             title: Text(_time.format(context)),
             onTap: () async {
               final picked = await showTimePicker(context: context, initialTime: _time);
               if (picked != null) setState(() => _time = picked);
             },
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           FilledButton.icon(
             onPressed: _save,
-            icon: const Icon(Icons.save),
-            label: const Text('Salva appuntamento'),
+            icon: Icon(Icons.save),
+            label: Text(LanguageService.uiText('Salva appuntamento')),
           ),
         ],
       ),
@@ -2000,11 +2009,11 @@ class _AppointmentEditorPageState extends State<AppointmentEditorPage> {
 class _AppointmentDraft {
   final String title;
   final DateTime dateTime;
-  const _AppointmentDraft(this.title, this.dateTime);
+  _AppointmentDraft(this.title, this.dateTime);
 }
 
 class MedicinesPage extends StatefulWidget {
-  const MedicinesPage({super.key});
+  MedicinesPage({super.key});
 
   @override
   State<MedicinesPage> createState() => _MedicinesPageState();
@@ -2028,7 +2037,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
   Future<void> _add() async {
     final result = await Navigator.push<_MedicineDraft>(
       context,
-      MaterialPageRoute(builder: (_) => const MedicineEditorPage()),
+      MaterialPageRoute(builder: (_) => MedicineEditorPage()),
     );
     if (result == null) return;
 
@@ -2099,16 +2108,16 @@ class _MedicinesPageState extends State<MedicinesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Promemoria farmaci')),
+      appBar: AppBar(title: Text(LanguageService.uiText('Promemoria farmaci'))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _add,
-        icon: const Icon(Icons.add),
-        label: const Text('Aggiungi'),
+        icon: Icon(Icons.add),
+        label: Text(LanguageService.uiText('Aggiungi')),
       ),
       body: _medicines.isEmpty
-          ? const Center(child: Text('Nessun promemoria farmaco impostato.'))
+          ? Center(child: Text(LanguageService.uiText('Nessun promemoria farmaco impostato.')))
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               itemCount: _medicines.length,
               itemBuilder: (_, i) {
                 final m = _medicines[i];
@@ -2117,27 +2126,28 @@ class _MedicinesPageState extends State<MedicinesPage> {
                 return Card(
                   child: ListTile(
                     onTap: () => _edit(i),
-                    leading: const Icon(
+                    leading: Icon(
                       Icons.medication,
                       color: SaluteRispondeApp.primary,
                     ),
-                    title: Text(m['name']?.toString() ?? 'Farmaco'),
+                    title: Text(m['name']?.toString() ?? LanguageService.uiText('Farmaco')),
                     subtitle: Text(
-                      'Ogni giorno alle ${hour.toString().padLeft(2, '0')}:'
-                      '${minute.toString().padLeft(2, '0')}',
+                      LanguageService.everyDayAt(
+                        '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
+                      ),
                     ),
                     trailing: Wrap(
                       spacing: 0,
                       children: [
                         IconButton(
-                          tooltip: 'Modifica',
+                          tooltip: LanguageService.uiText('Modifica'),
                           onPressed: () => _edit(i),
-                          icon: const Icon(Icons.edit_outlined),
+                          icon: Icon(Icons.edit_outlined),
                         ),
                         IconButton(
-                          tooltip: 'Elimina',
+                          tooltip: LanguageService.uiText('Elimina'),
                           onPressed: () => _delete(i),
-                          icon: const Icon(Icons.delete_outline),
+                          icon: Icon(Icons.delete_outline),
                         ),
                       ],
                     ),
@@ -2151,7 +2161,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
 
 class MedicineEditorPage extends StatefulWidget {
   final _MedicineDraft? initial;
-  const MedicineEditorPage({super.key, this.initial});
+  MedicineEditorPage({super.key, this.initial});
 
   @override
   State<MedicineEditorPage> createState() => _MedicineEditorPageState();
@@ -2181,7 +2191,7 @@ class _MedicineEditorPageState extends State<MedicineEditorPage> {
     final name = _name.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Inserisci il nome del farmaco.')),
+        SnackBar(content: Text(LanguageService.uiText('Inserisci il nome del farmaco.'))),
       );
       return;
     }
@@ -2197,33 +2207,33 @@ class _MedicineEditorPageState extends State<MedicineEditorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(editing ? 'Modifica promemoria' : 'Nuovo promemoria'),
+        title: Text(editing ? LanguageService.uiText('Modifica promemoria') : LanguageService.uiText('Nuovo promemoria')),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(18),
         children: [
           TextField(
             controller: _name,
-            decoration: const InputDecoration(
-              labelText: 'Farmaco / integratore',
+            decoration: InputDecoration(
+              labelText: LanguageService.uiText('Farmaco / integratore'),
               border: OutlineInputBorder(),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ListTile(
-            leading: const Icon(Icons.schedule),
+            leading: Icon(Icons.schedule),
             title: Text(_time.format(context)),
             onTap: () async {
               final picked = await showTimePicker(context: context, initialTime: _time);
               if (picked != null) setState(() => _time = picked);
             },
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           FilledButton.icon(
             onPressed: _save,
-            icon: const Icon(Icons.notifications_active),
+            icon: Icon(Icons.notifications_active),
             label: Text(
-              editing ? 'Salva modifiche' : 'Salva e attiva promemoria',
+              editing ? LanguageService.uiText('Salva modifiche') : LanguageService.uiText('Salva e attiva promemoria'),
             ),
           ),
         ],
@@ -2236,18 +2246,18 @@ class _MedicineDraft {
   final String name;
   final int hour;
   final int minute;
-  const _MedicineDraft(this.name, this.hour, this.minute);
+  _MedicineDraft(this.name, this.hour, this.minute);
 }
 
 class UsefulNumbersPage extends StatefulWidget {
-  const UsefulNumbersPage({super.key});
+  UsefulNumbersPage({super.key});
 
   @override
   State<UsefulNumbersPage> createState() => _UsefulNumbersPageState();
 }
 
 class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
-  static const _contactsKey = 'salute_risponde_personal_health_contacts';
+  static _contactsKey = 'salute_risponde_personal_health_contacts';
   List<Map<String, String>> _contacts = [];
 
   @override
@@ -2286,7 +2296,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
     final uri = Uri(scheme: 'tel', path: number.replaceAll(' ', ''));
     if (!await launchUrl(uri) && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Impossibile aprire il telefono.')),
+        SnackBar(content: Text(LanguageService.uiText('Impossibile aprire il telefono.'))),
       );
     }
   }
@@ -2301,27 +2311,27 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
     final result = await showDialog<Map<String, String>>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(index == null ? 'Aggiungi contatto sanitario' : 'Modifica contatto'),
+        title: Text(index == null ? LanguageService.uiText('Aggiungi contatto sanitario') : LanguageService.uiText('Modifica contatto')),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: name, decoration: const InputDecoration(labelText: 'Nome')),
+              TextField(controller: name, decoration: InputDecoration(labelText: LanguageService.uiText('Nome'))),
               TextField(
                 controller: role,
-                decoration: const InputDecoration(
-                  labelText: 'Ruolo / specialità',
-                  hintText: 'Es. Medico di base, Cardiologo',
+                decoration: InputDecoration(
+                  labelText: LanguageService.uiText('Ruolo / specialità'),
+                  hintText: LanguageService.uiText('Es. Medico di base, Cardiologo'),
                 ),
               ),
               TextField(
                 controller: phone,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(labelText: 'Telefono'),
+                decoration: InputDecoration(labelText: LanguageService.uiText('Telefono')),
               ),
               TextField(
                 controller: note,
-                decoration: const InputDecoration(labelText: 'Nota (facoltativa)'),
+                decoration: InputDecoration(labelText: LanguageService.uiText('Nota (facoltativa)')),
               ),
             ],
           ),
@@ -2329,7 +2339,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('ANNULLA'),
+            child: Text(LanguageService.uiText('ANNULLA')),
           ),
           FilledButton(
             onPressed: () {
@@ -2341,7 +2351,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
                 'note': note.text.trim(),
               });
             },
-            child: const Text('SALVA'),
+            child: Text(LanguageService.uiText('SALVA')),
           ),
         ],
       ),
@@ -2370,47 +2380,47 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
 
   @override
   Widget build(BuildContext context) {
-    const numbers = [
-      ('Numero unico emergenze', '112'),
-      ('Emergenza sanitaria', '118'),
-      ('Polizia di Stato', '113'),
-      ('Vigili del Fuoco', '115'),
-      ('Guardia di Finanza', '117'),
-      ('Telefono Azzurro', '19696'),
+    numbers = [
+      (LanguageService.uiText('Numero unico emergenze'), '112'),
+      (LanguageService.uiText('Emergenza sanitaria'), '118'),
+      (LanguageService.uiText('Polizia di Stato'), '113'),
+      (LanguageService.uiText('Vigili del Fuoco'), '115'),
+      (LanguageService.uiText('Guardia di Finanza'), '117'),
+      (LanguageService.uiText('Telefono Azzurro'), '19696'),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Numeri utili')),
+      appBar: AppBar(title: Text(LanguageService.uiText('Numeri utili'))),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
-          const Text(
-            'Numeri nazionali',
+          Text(
+            LanguageService.uiText('Numeri nazionali'),
             style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ...numbers.map(
             (item) => Card(
               child: ListTile(
-                leading: const Icon(Icons.phone_in_talk, color: SaluteRispondeApp.primary),
+                leading: Icon(Icons.phone_in_talk, color: SaluteRispondeApp.primary),
                 title: Text(item.$1),
                 subtitle: Text(item.$2),
-                trailing: const Icon(Icons.phone),
+                trailing: Icon(Icons.phone),
                 onTap: () => _call(item.$2),
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          const Text(
-            'I miei contatti sanitari',
+          SizedBox(height: 20),
+          Text(
+            LanguageService.uiText('I miei contatti sanitari'),
             style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           if (_contacts.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 12),
               child: Text(
-                'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.',
+                LanguageService.uiText('Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.'),
               ),
             )
           else
@@ -2425,43 +2435,43 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
               ];
               return Card(
                 child: ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.medical_services_outlined,
                     color: SaluteRispondeApp.primary,
                   ),
-                  title: Text(c['name'] ?? 'Contatto'),
+                  title: Text(c['name'] ?? LanguageService.uiText('Contatto')),
                   subtitle: Text(subtitleParts.join(' • ')),
                   onTap: () => _call(c['phone'] ?? ''),
                   trailing: Wrap(
                     spacing: 0,
                     children: [
                       IconButton(
-                        tooltip: 'Modifica',
+                        tooltip: LanguageService.uiText('Modifica'),
                         onPressed: () => _editContact(index: i),
-                        icon: const Icon(Icons.edit_outlined),
+                        icon: Icon(Icons.edit_outlined),
                       ),
                       IconButton(
-                        tooltip: 'Elimina',
+                        tooltip: LanguageService.uiText('Elimina'),
                         onPressed: () => _deleteContact(i),
-                        icon: const Icon(Icons.delete_outline),
+                        icon: Icon(Icons.delete_outline),
                       ),
                     ],
                   ),
                 ),
               );
             }),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: () => _editContact(),
-              icon: const Icon(Icons.person_add_alt_1),
-              label: const Text('Aggiungi contatto'),
+              icon: Icon(Icons.person_add_alt_1),
+              label: Text(LanguageService.uiText('Aggiungi contatto')),
             ),
           ),
-          const SizedBox(height: 18),
-          const Text(
-            'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.',
+          SizedBox(height: 18),
+          Text(
+            LanguageService.uiText('I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.'),
             style: TextStyle(fontSize: 12.5, color: Colors.black54),
           ),
         ],
@@ -2471,7 +2481,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
 }
 
 class PlansPage extends StatefulWidget {
-  const PlansPage({super.key});
+  PlansPage({super.key});
 
   @override
   State<PlansPage> createState() => _PlansPageState();
@@ -2503,14 +2513,14 @@ class _PlansPageState extends State<PlansPage> {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Piano $plan'),
-        content: const Text(
-          'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.',
+        title: Text(LanguageService.planDialogTitle(plan)),
+        content: Text(
+          LanguageService.uiText('Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: Text('OK'),
           ),
         ],
       ),
@@ -2520,46 +2530,46 @@ class _PlansPageState extends State<PlansPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Piani Salute Risponde')),
+      appBar: AppBar(title: Text(LanguageService.uiText('Piani Salute Risponde'))),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         children: [
           _PlanCard(
             title: 'FREE',
-            price: 'Gratis',
-            features: const [
-              '3 risposte gratuite',
-              '1 esame o referto',
-              'Avvisi di sicurezza sempre disponibili',
+            price: LanguageService.uiText('Gratis'),
+            features: [
+              LanguageService.uiText('3 risposte gratuite'),
+              LanguageService.uiText('1 esame o referto'),
+              LanguageService.uiText('Avvisi di sicurezza sempre disponibili'),
             ],
             selected: selected == 'FREE',
-            button: 'PIANO ATTUALE',
+            button: LanguageService.uiText('PIANO ATTUALE'),
             onTap: () => _choose('FREE'),
           ),
           _PlanCard(
             title: 'PLUS',
-            price: 'Prezzo da definire / mese',
-            features: const [
-              'Più consultazioni',
-              'Più documenti',
-              'Cronologia',
-              'Agenda Salute',
+            price: LanguageService.uiText('Prezzo da definire / mese'),
+            features: [
+              LanguageService.uiText('Più consultazioni'),
+              LanguageService.uiText('Più documenti'),
+              LanguageService.uiText('Cronologia'),
+              LanguageService.uiText('Agenda Salute'),
             ],
             selected: selected == 'PLUS',
-            button: 'SCEGLI PLUS',
+            button: LanguageService.uiText('SCEGLI PLUS'),
             onTap: () => _choose('PLUS'),
           ),
           _PlanCard(
             title: 'PRO',
-            price: 'Prezzo da definire / mese',
-            features: const [
-              'Analisi avanzata documenti',
-              'Riepilogo per il medico',
-              'Preparazione visita',
-              'Funzioni avanzate',
+            price: LanguageService.uiText('Prezzo da definire / mese'),
+            features: [
+              LanguageService.uiText('Analisi avanzata documenti'),
+              LanguageService.uiText('Riepilogo per il medico'),
+              LanguageService.uiText('Preparazione visita'),
+              LanguageService.uiText('Funzioni avanzate'),
             ],
             selected: selected == 'PRO',
-            button: 'SCEGLI PRO',
+            button: LanguageService.uiText('SCEGLI PRO'),
             onTap: () => _choose('PRO'),
           ),
         ],
@@ -2576,7 +2586,7 @@ class _PlanCard extends StatelessWidget {
   final String button;
   final VoidCallback onTap;
 
-  const _PlanCard({
+  _PlanCard({
     required this.title,
     required this.price,
     required this.features,
@@ -2588,9 +2598,9 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: EdgeInsets.only(bottom: 14),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2598,33 +2608,33 @@ class _PlanCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
                 ),
-                const Spacer(),
-                if (selected) const Chip(label: Text('ATTIVO')),
+                Spacer(),
+                if (selected) Chip(label: Text(LanguageService.uiText('ATTIVO'))),
               ],
             ),
             Text(
               price,
-              style: const TextStyle(
+              style: TextStyle(
                 color: SaluteRispondeApp.primary,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ...features.map(
               (f) => Padding(
-                padding: const EdgeInsets.only(bottom: 7),
+                padding: EdgeInsets.only(bottom: 7),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_circle_outline, size: 19),
-                    const SizedBox(width: 8),
+                    Icon(Icons.check_circle_outline, size: 19),
+                    SizedBox(width: 8),
                     Expanded(child: Text(f)),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               child: FilledButton(
@@ -2640,7 +2650,7 @@ class _PlanCard extends StatelessWidget {
 }
 
 class AccountPage extends StatelessWidget {
-  const AccountPage({super.key});
+  AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -2658,23 +2668,23 @@ class AccountPage extends StatelessWidget {
                 await prefs.setInt('salute_risponde_free_answers_used', 0);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Modalità TESTER disattivata. Piano FREE ripristinato.'),
+                    SnackBar(
+                      content: Text(LanguageService.uiText('Modalità TESTER disattivata. Piano FREE ripristinato.')),
                     ),
                   );
                 }
               }
             },
-            child: const Text('Account Salute Risponde'),
+            child: Text(LanguageService.uiText('Account Salute Risponde')),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'ACCEDI'),
-              Tab(text: 'ISCRIVITI'),
+              Tab(text: LanguageService.uiText('ACCEDI')),
+              Tab(text: LanguageService.uiText('ISCRIVITI')),
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
             _AccountForm(register: false),
@@ -2688,7 +2698,7 @@ class AccountPage extends StatelessWidget {
 
 class _AccountForm extends StatefulWidget {
   final bool register;
-  const _AccountForm({required this.register});
+  _AccountForm({required this.register});
 
   @override
   State<_AccountForm> createState() => _AccountFormState();
@@ -2708,40 +2718,40 @@ class _AccountFormState extends State<_AccountForm> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       children: [
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         TextField(
           controller: email,
           keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(
-            labelText: 'Email',
+          decoration: InputDecoration(
+            labelText: LanguageService.uiText('Email'),
             border: OutlineInputBorder(),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         TextField(
           controller: password,
           obscureText: true,
-          decoration: const InputDecoration(
-            labelText: 'Password',
+          decoration: InputDecoration(
+            labelText: LanguageService.uiText('Password'),
             border: OutlineInputBorder(),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         FilledButton(
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
                   widget.register
-                      ? 'Registrazione non ancora attiva.'
-                      : 'Accesso non ancora attivo.',
+                      ? LanguageService.uiText('Registrazione non ancora attiva.')
+                      : LanguageService.uiText('Accesso non ancora attivo.'),
                 ),
               ),
             );
           },
-          child: Text(widget.register ? 'ISCRIVITI' : 'ACCEDI'),
+          child: Text(widget.register ? LanguageService.uiText('ISCRIVITI') : LanguageService.uiText('ACCEDI')),
         ),
       ],
     );
@@ -2749,30 +2759,30 @@ class _AccountFormState extends State<_AccountForm> {
 }
 
 class _SafetyCard extends StatelessWidget {
-  const _SafetyCard();
+  _SafetyCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFEAF8FA), Color(0xFFDDF6F3)],
+        gradient: LinearGradient(
+          colors: [Color(0xFFEAF9F4), Color(0xFFDDF5EC)],
         ),
         borderRadius: BorderRadius.circular(22),
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
-            Icons.verified_user_outlined,
-            color: SaluteRispondeApp.secondary,
+            Icons.health_and_safety_outlined,
+            color: SaluteRispondeApp.accent,
             size: 28,
           ),
           SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.',
+              LanguageService.uiText('Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.'),
               style: TextStyle(
                 color: SaluteRispondeApp.navy,
                 height: 1.45,
@@ -2787,8 +2797,6 @@ class _SafetyCard extends StatelessWidget {
 }
 
 String _formatDateTime(DateTime dt) {
-  return '${dt.day.toString().padLeft(2, '0')}/'
-      '${dt.month.toString().padLeft(2, '0')}/${dt.year} · '
-      '${dt.hour.toString().padLeft(2, '0')}:'
-      '${dt.minute.toString().padLeft(2, '0')}';
+  final locale = LanguageService.locale.toLanguageTag();
+  return DateFormat.yMd(locale).add_Hm().format(dt);
 }
