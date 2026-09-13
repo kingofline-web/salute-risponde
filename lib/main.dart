@@ -278,7 +278,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    height: 168,
+                    constraints: BoxConstraints(minHeight: 168),
                     padding: EdgeInsets.fromLTRB(22, 18, 10, 18),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
