@@ -373,6 +373,13 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(height: 14),
             _ActionTile(
+              icon: Icons.menu_book_outlined,
+              title: LanguageService.leafletsTitle,
+              subtitle: LanguageService.leafletsSubtitle,
+              onTap: () => _open(context, LeafletsPage()),
+            ),
+            SizedBox(height: 12),
+            _ActionTile(
               icon: Icons.workspace_premium_outlined,
               title: LanguageService.t('plans_title'),
               subtitle: LanguageService.t('choose_plan'),
@@ -698,6 +705,156 @@ class _ActionTile extends StatelessWidget {
   }
 }
 
+
+class LeafletsPage extends StatefulWidget {
+  LeafletsPage({super.key});
+
+  @override
+  State<LeafletsPage> createState() => _LeafletsPageState();
+}
+
+class _LeafletsPageState extends State<LeafletsPage> {
+  final _storage = AppStorageService();
+  List<Map<String, dynamic>> _items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _reload();
+  }
+
+  Future<void> _reload() async {
+    final data = await _storage.loadLeaflets();
+    if (mounted) setState(() => _items = data);
+  }
+
+  Future<void> _openAifa(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(LanguageService.leafletOpenError)),
+      );
+    }
+  }
+
+  Future<void> _delete(int index) async {
+    _items.removeAt(index);
+    await _storage.saveLeaflets(_items);
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _openAifaHome() async {
+    await _openAifa('https://medicinali.aifa.gov.it/it/#/it/');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(LanguageService.leafletsTitle)),
+      body: ListView(
+        padding: EdgeInsets.all(16),
+        children: [
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.verified_outlined,
+                        color: SaluteRispondeApp.primary,
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          LanguageService.leafletsOfficialTitle,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    LanguageService.leafletsOfficialBody,
+                    style: TextStyle(height: 1.4),
+                  ),
+                  SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: _openAifaHome,
+                    icon: Icon(Icons.search_rounded),
+                    label: Text(LanguageService.leafletsSearchAifa),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 18),
+          Text(
+            LanguageService.leafletsSavedTitle,
+            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
+          ),
+          SizedBox(height: 8),
+          if (_items.isEmpty)
+            Text(LanguageService.leafletsEmpty)
+          else
+            ...List.generate(_items.length, (index) {
+              final item = _items[index];
+              final medicine = item['medicine']?.toString() ?? '';
+              final url = item['url']?.toString() ?? '';
+              final rawDate = item['date']?.toString() ?? '';
+              final parsedDate = DateTime.tryParse(rawDate);
+              final dateText = parsedDate == null
+                  ? ''
+                  : DateFormat('dd/MM/yyyy').format(parsedDate.toLocal());
+
+              return Card(
+                child: ListTile(
+                  leading: Icon(
+                    Icons.description_outlined,
+                    color: SaluteRispondeApp.primary,
+                  ),
+                  title: Text(
+                    medicine,
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                  subtitle: Text(
+                    dateText.isEmpty
+                        ? LanguageService.leafletAifaSource
+                        : '${LanguageService.leafletAifaSource} • $dateText',
+                  ),
+                  onTap: url.isEmpty ? null : () => _openAifa(url),
+                  trailing: Wrap(
+                    spacing: 0,
+                    children: [
+                      IconButton(
+                        tooltip: LanguageService.leafletOpenOnAifa,
+                        onPressed: url.isEmpty ? null : () => _openAifa(url),
+                        icon: Icon(Icons.open_in_new_rounded),
+                      ),
+                      IconButton(
+                        tooltip: LanguageService.uiText('Elimina'),
+                        onPressed: () => _delete(index),
+                        icon: Icon(Icons.delete_outline_rounded),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+        ],
+      ),
+    );
+  }
+}
+
+
 class MedicalChatPage extends StatefulWidget {
   MedicalChatPage({super.key});
 
@@ -749,9 +906,68 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
 
   String _cleanAiText(String text) {
     return text
+        .replaceAll(RegExp(r'\[\[SR_LEAFLET:[^\]]+\]\]'), '')
         .replaceAll('**', '')
         .replaceAll('__', '')
-        .replaceAll(RegExp(r'^\s*[-•]\s+', multiLine: true), '• ');
+        .replaceAll(RegExp(r'^\s*[-•]\s+', multiLine: true), '• ')
+        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
+        .trim();
+  }
+
+  List<String> _extractLeafletOffers(String text) {
+    final matches = RegExp(r'\[\[SR_LEAFLET:([^\]]+)\]\]').allMatches(text);
+    final values = <String>[];
+
+    for (final match in matches) {
+      final value = (match.group(1) ?? '').trim();
+      if (value.isEmpty) continue;
+      if (!values.any((item) => item.toLowerCase() == value.toLowerCase())) {
+        values.add(value);
+      }
+    }
+
+    return values.take(2).toList();
+  }
+
+  String _aifaSearchUrl(String medicine) {
+    final query = Uri.encodeComponent(medicine);
+    return 'https://medicinali.aifa.gov.it/it/#/it/risultati?query=$query&spellingCorrection=true';
+  }
+
+  Future<void> _offerLeaflet(String medicine) async {
+    if (!mounted) return;
+
+    final open = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(LanguageService.leafletOfferTitle),
+        content: Text(LanguageService.leafletOfferBody(medicine)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(LanguageService.leafletNo),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(LanguageService.leafletSaveAndOpen),
+          ),
+        ],
+      ),
+    );
+
+    if (open != true || !mounted) return;
+
+    final url = _aifaSearchUrl(medicine);
+    await _storage.saveLeafletEntry(medicine: medicine, url: url);
+
+    final uri = Uri.parse(url);
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(LanguageService.leafletOpenError)),
+      );
+    }
   }
 
   void _scrollToBottom() {
@@ -1014,10 +1230,12 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       final reply = await _service.sendMessage(
         message: message,
         history: history,
+        plan: _plan,
         attachmentPath: attachment?.path,
         attachmentName: attachment?.name,
       );
 
+      final leafletOffers = _extractLeafletOffers(reply);
       final cleanedReply = _cleanAiText(reply);
 
       if (!mounted) return;
@@ -1038,6 +1256,11 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
         } else {
           _freeUsed = newCount;
         }
+      }
+
+      if (leafletOffers.isNotEmpty && mounted) {
+        await Future<void>.delayed(Duration(milliseconds: 250));
+        if (mounted) await _offerLeaflet(leafletOffers.first);
       }
 
       if (_plan == 'FREE' && _freeUsed >= _freeLimit) {
