@@ -278,7 +278,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    height: 168,
+                    constraints: BoxConstraints(minHeight: 168),
                     padding: EdgeInsets.fromLTRB(22, 18, 10, 18),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -305,7 +305,9 @@ class HomePage extends StatelessWidget {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                LanguageService.t('simple_tools'),
+                                LanguageService.currentCode == 'it'
+                                    ? 'Informazioni chiare\nper la tua salute.'
+                                    : LanguageService.t('simple_tools'),
                                 style: TextStyle(
                                   color: Color(0xFFE9FFF7),
                                   fontSize: 14,
