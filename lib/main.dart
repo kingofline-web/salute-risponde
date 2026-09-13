@@ -278,7 +278,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    constraints: BoxConstraints(minHeight: 168),
+                    height: 168,
                     padding: EdgeInsets.fromLTRB(22, 18, 10, 18),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -854,7 +854,6 @@ class _LeafletsPageState extends State<LeafletsPage> {
   }
 }
 
-
 class MedicalChatPage extends StatefulWidget {
   MedicalChatPage({super.key});
 
@@ -934,28 +933,8 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
     return 'https://medicinali.aifa.gov.it/it/#/it/risultati?query=$query&spellingCorrection=true';
   }
 
-  Future<void> _offerLeaflet(String medicine) async {
+  Future<void> _openLeaflet(String medicine) async {
     if (!mounted) return;
-
-    final open = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(LanguageService.leafletOfferTitle),
-        content: Text(LanguageService.leafletOfferBody(medicine)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(LanguageService.leafletNo),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(LanguageService.leafletSaveAndOpen),
-          ),
-        ],
-      ),
-    );
-
-    if (open != true || !mounted) return;
 
     final url = _aifaSearchUrl(medicine);
     await _storage.saveLeafletEntry(medicine: medicine, url: url);
@@ -1241,7 +1220,11 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
       if (!mounted) return;
       setState(() {
         _messages.add(
-          _ChatMessage(user: false, text: cleanedReply),
+          _ChatMessage(
+            user: false,
+            text: cleanedReply,
+            leaflets: leafletOffers,
+          ),
         );
       });
       _scrollToBottom();
@@ -1256,11 +1239,6 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
         } else {
           _freeUsed = newCount;
         }
-      }
-
-      if (leafletOffers.isNotEmpty && mounted) {
-        await Future<void>.delayed(Duration(milliseconds: 250));
-        if (mounted) await _offerLeaflet(leafletOffers.first);
       }
 
       if (_plan == 'FREE' && _freeUsed >= _freeLimit) {
@@ -1447,12 +1425,70 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
                         ),
                       ],
                     ),
-                    child: Text(
-                      m.text,
-                      style: TextStyle(
-                        color: m.user ? Colors.white : SaluteRispondeApp.text,
-                        height: 1.35,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          m.text,
+                          style: TextStyle(
+                            color: m.user ? Colors.white : SaluteRispondeApp.text,
+                            height: 1.35,
+                          ),
+                        ),
+                        if (!m.user && m.leaflets.isNotEmpty) ...[
+                          SizedBox(height: 10),
+                          ...m.leaflets.map(
+                            (medicine) => Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: InkWell(
+                                onTap: () => _openLeaflet(medicine),
+                                borderRadius: BorderRadius.circular(14),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFEAF8F4),
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color: Color(0xFFD5ECE6),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.menu_book_outlined,
+                                        size: 20,
+                                        color: SaluteRispondeApp.primary,
+                                      ),
+                                      SizedBox(width: 9),
+                                      Expanded(
+                                        child: Text(
+                                          '${LanguageService.uiText('Foglietto illustrativo ufficiale AIFA')} • $medicine',
+                                          style: TextStyle(
+                                            color: SaluteRispondeApp.primary,
+                                            fontWeight: FontWeight.w800,
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 6),
+                                      Icon(
+                                        Icons.open_in_new_rounded,
+                                        size: 17,
+                                        color: SaluteRispondeApp.primary,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 );
@@ -1598,7 +1634,13 @@ class _MedicalChatPageState extends State<MedicalChatPage> {
 class _ChatMessage {
   final bool user;
   final String text;
-  _ChatMessage({required this.user, required this.text});
+  final List<String> leaflets;
+
+  _ChatMessage({
+    required this.user,
+    required this.text,
+    this.leaflets = const [],
+  });
 }
 
 class DocumentsPage extends StatefulWidget {
