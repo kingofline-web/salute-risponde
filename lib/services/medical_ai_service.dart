@@ -16,6 +16,7 @@ class MedicalAiService {
   Future<String> sendMessage({
     required String message,
     List<Map<String, String>> history = const [],
+    String plan = 'FREE',
     String? attachmentPath,
     String? attachmentName,
   }) async {
@@ -28,6 +29,7 @@ class MedicalAiService {
       'message': clean,
       'history': history,
       'language': LanguageService.currentCode,
+      'plan': plan.trim().toUpperCase(),
     };
 
     if (attachmentPath != null) {

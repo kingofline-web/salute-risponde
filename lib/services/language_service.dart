@@ -1261,4 +1261,159 @@ class LanguageService {
       default: return 'Avvisi giornalieri per i farmaci';
     }
   }
+
+  static String get leafletsTitle {
+    switch (currentCode) {
+      case 'en': return 'Patient leaflets';
+      case 'es': return 'Prospectos';
+      case 'fr': return 'Notices des médicaments';
+      case 'de': return 'Packungsbeilagen';
+      case 'pt': return 'Folhetos informativos';
+      default: return 'Foglietti illustrativi';
+    }
+  }
+
+  static String get leafletsSubtitle {
+    switch (currentCode) {
+      case 'en': return 'Official AIFA medicine information';
+      case 'es': return 'Información oficial de medicamentos AIFA';
+      case 'fr': return 'Informations officielles AIFA sur les médicaments';
+      case 'de': return 'Offizielle AIFA-Arzneimittelinformationen';
+      case 'pt': return 'Informação oficial AIFA sobre medicamentos';
+      default: return 'Informazioni ufficiali AIFA sui farmaci';
+    }
+  }
+
+  static String get leafletOfferTitle {
+    switch (currentCode) {
+      case 'en': return 'Official medicine leaflet';
+      case 'es': return 'Prospecto oficial';
+      case 'fr': return 'Notice officielle';
+      case 'de': return 'Offizielle Packungsbeilage';
+      case 'pt': return 'Folheto informativo oficial';
+      default: return 'Foglio illustrativo ufficiale';
+    }
+  }
+
+  static String leafletOfferBody(String medicine) {
+    switch (currentCode) {
+      case 'en': return 'Would you like to save the official AIFA lookup for $medicine and open it now?';
+      case 'es': return '¿Quieres guardar la búsqueda oficial de AIFA para $medicine y abrirla ahora?';
+      case 'fr': return 'Voulez-vous enregistrer la recherche officielle AIFA pour $medicine et l’ouvrir maintenant ?';
+      case 'de': return 'Möchtest du die offizielle AIFA-Suche für $medicine speichern und jetzt öffnen?';
+      case 'pt': return 'Quer guardar a pesquisa oficial AIFA para $medicine e abri-la agora?';
+      default: return 'Vuoi salvare la ricerca ufficiale AIFA per $medicine e aprirla adesso?';
+    }
+  }
+
+  static String get leafletNo {
+    switch (currentCode) {
+      case 'en': return 'NO';
+      case 'es': return 'NO';
+      case 'fr': return 'NON';
+      case 'de': return 'NEIN';
+      case 'pt': return 'NÃO';
+      default: return 'NO';
+    }
+  }
+
+  static String get leafletSaveAndOpen {
+    switch (currentCode) {
+      case 'en': return 'SAVE AND OPEN';
+      case 'es': return 'GUARDAR Y ABRIR';
+      case 'fr': return 'ENREGISTRER ET OUVRIR';
+      case 'de': return 'SPEICHERN UND ÖFFNEN';
+      case 'pt': return 'GUARDAR E ABRIR';
+      default: return 'SALVA E APRI';
+    }
+  }
+
+  static String get leafletOpenError {
+    switch (currentCode) {
+      case 'en': return 'Unable to open AIFA right now.';
+      case 'es': return 'No se puede abrir AIFA en este momento.';
+      case 'fr': return 'Impossible d’ouvrir AIFA pour le moment.';
+      case 'de': return 'AIFA kann derzeit nicht geöffnet werden.';
+      case 'pt': return 'Não foi possível abrir a AIFA neste momento.';
+      default: return 'Non riesco ad aprire AIFA in questo momento.';
+    }
+  }
+
+  static String get leafletsOfficialTitle {
+    switch (currentCode) {
+      case 'en': return 'Official AIFA source';
+      case 'es': return 'Fuente oficial AIFA';
+      case 'fr': return 'Source officielle AIFA';
+      case 'de': return 'Offizielle AIFA-Quelle';
+      case 'pt': return 'Fonte oficial AIFA';
+      default: return 'Fonte ufficiale AIFA';
+    }
+  }
+
+  static String get leafletsOfficialBody {
+    switch (currentCode) {
+      case 'en': return 'Saved medicines open the official AIFA database. Patient leaflets are dynamic documents and may be updated over time.';
+      case 'es': return 'Los medicamentos guardados abren la base de datos oficial de AIFA. Los prospectos son documentos dinámicos y pueden actualizarse con el tiempo.';
+      case 'fr': return 'Les médicaments enregistrés ouvrent la base officielle AIFA. Les notices sont des documents dynamiques susceptibles d’être mises à jour.';
+      case 'de': return 'Gespeicherte Arzneimittel öffnen die offizielle AIFA-Datenbank. Packungsbeilagen sind dynamische Dokumente und können aktualisiert werden.';
+      case 'pt': return 'Os medicamentos guardados abrem a base oficial AIFA. Os folhetos são documentos dinâmicos e podem ser atualizados ao longo do tempo.';
+      default: return 'I farmaci salvati aprono la banca dati ufficiale AIFA. I fogli illustrativi sono documenti dinamici e possono essere aggiornati nel tempo.';
+    }
+  }
+
+  static String get leafletsSearchAifa {
+    switch (currentCode) {
+      case 'en': return 'Search a medicine on AIFA';
+      case 'es': return 'Buscar un medicamento en AIFA';
+      case 'fr': return 'Rechercher un médicament sur AIFA';
+      case 'de': return 'Arzneimittel bei AIFA suchen';
+      case 'pt': return 'Pesquisar um medicamento na AIFA';
+      default: return 'Cerca un farmaco su AIFA';
+    }
+  }
+
+  static String get leafletsSavedTitle {
+    switch (currentCode) {
+      case 'en': return 'Saved medicines';
+      case 'es': return 'Medicamentos guardados';
+      case 'fr': return 'Médicaments enregistrés';
+      case 'de': return 'Gespeicherte Arzneimittel';
+      case 'pt': return 'Medicamentos guardados';
+      default: return 'Farmaci salvati';
+    }
+  }
+
+  static String get leafletsEmpty {
+    switch (currentCode) {
+      case 'en': return 'No medicine leaflets saved yet.';
+      case 'es': return 'Aún no hay prospectos guardados.';
+      case 'fr': return 'Aucune notice enregistrée pour le moment.';
+      case 'de': return 'Noch keine Packungsbeilage gespeichert.';
+      case 'pt': return 'Ainda não existem folhetos guardados.';
+      default: return 'Nessun foglio illustrativo salvato.';
+    }
+  }
+
+  static String get leafletAifaSource {
+    switch (currentCode) {
+      case 'en': return 'Official AIFA database';
+      case 'es': return 'Base de datos oficial AIFA';
+      case 'fr': return 'Base officielle AIFA';
+      case 'de': return 'Offizielle AIFA-Datenbank';
+      case 'pt': return 'Base oficial AIFA';
+      default: return 'Banca dati ufficiale AIFA';
+    }
+  }
+
+  static String get leafletOpenOnAifa {
+    switch (currentCode) {
+      case 'en': return 'Open on AIFA';
+      case 'es': return 'Abrir en AIFA';
+      case 'fr': return 'Ouvrir sur AIFA';
+      case 'de': return 'Bei AIFA öffnen';
+      case 'pt': return 'Abrir na AIFA';
+      default: return 'Apri su AIFA';
+    }
+  }
+
 }

@@ -8,6 +8,7 @@ class AppStorageService {
   static const _appointmentsKey = 'salute_risponde_appointments';
   static const _medicinesKey = 'salute_risponde_medicines';
   static const _documentsKey = 'salute_risponde_documents';
+  static const _leafletsKey = 'salute_risponde_leaflets';
   static const _selectedPlanKey = 'salute_risponde_selected_plan';
 
   Future<List<Map<String, dynamic>>> loadAppointments() async {
@@ -32,6 +33,34 @@ class AppStorageService {
 
   Future<void> saveDocuments(List<Map<String, dynamic>> data) async {
     await _saveList(_documentsKey, data);
+  }
+
+  Future<List<Map<String, dynamic>>> loadLeaflets() async {
+    return _loadList(_leafletsKey);
+  }
+
+  Future<void> saveLeaflets(List<Map<String, dynamic>> data) async {
+    await _saveList(_leafletsKey, data);
+  }
+
+  Future<void> saveLeafletEntry({
+    required String medicine,
+    required String url,
+  }) async {
+    final items = await loadLeaflets();
+    final normalized = medicine.trim().toLowerCase();
+
+    items.removeWhere(
+      (item) => (item['medicine']?.toString().trim().toLowerCase() ?? '') == normalized,
+    );
+
+    items.insert(0, {
+      'medicine': medicine.trim(),
+      'url': url,
+      'date': DateTime.now().toIso8601String(),
+    });
+
+    await saveLeaflets(items);
   }
 
   Future<String> getSelectedPlan() async {
