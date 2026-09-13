@@ -2,6 +2,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'language_service.dart';
+
 class NotificationService {
   NotificationService._();
   static final instance = NotificationService._();
@@ -40,14 +42,14 @@ class NotificationService {
 
     await _plugin.zonedSchedule(
       id,
-      'Visita domani',
-      '$title è programmata per domani.',
+      LanguageService.appointmentTomorrowTitle,
+      LanguageService.appointmentTomorrowBody(title),
       tz.TZDateTime.from(reminder, tz.local),
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'salute_risponde_visits',
-          'Visite e appuntamenti',
-          channelDescription: 'Promemoria delle visite programmate',
+          LanguageService.visitsChannelName,
+          channelDescription: LanguageService.visitsChannelDescription,
           importance: Importance.high,
           priority: Priority.high,
         ),
@@ -77,18 +79,20 @@ class NotificationService {
 
     await _plugin.zonedSchedule(
       id,
-      'È ora di prendere il farmaco',
+      LanguageService.medicineTimeTitle,
       medicine,
       scheduled,
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'salute_risponde_medicines',
-          'Promemoria farmaci',
-          channelDescription: 'Avvisi giornalieri per i farmaci',
+          LanguageService.medicinesChannelName,
+          channelDescription: LanguageService.medicinesChannelDescription,
           importance: Importance.max,
           priority: Priority.high,
           playSound: true,
-          sound: RawResourceAndroidNotificationSound('salute_risponde_medicine'),
+          sound: const RawResourceAndroidNotificationSound(
+            'salute_risponde_medicine',
+          ),
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

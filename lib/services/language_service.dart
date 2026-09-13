@@ -18,56 +18,20 @@ class LanguageOption {
 }
 
 class LanguageService {
-  static const String _prefsKey = 'salute_risponde_language';
+  static const String _prefsKey = 'salute_risponde_language_v2';
   static const String automaticCode = 'auto';
 
-  // Per impostazione predefinita l'app segue la lingua del telefono.
   static final ValueNotifier<String> notifier =
       ValueNotifier<String>(automaticCode);
 
   static const List<LanguageOption> options = [
-    LanguageOption(
-      code: automaticCode,
-      nativeName: 'Automatico · Telefono',
-      flag: '🌐',
-      locale: Locale('und'),
-    ),
-    LanguageOption(
-      code: 'it',
-      nativeName: 'Italiano',
-      flag: '🇮🇹',
-      locale: Locale('it', 'IT'),
-    ),
-    LanguageOption(
-      code: 'en',
-      nativeName: 'English',
-      flag: '🇬🇧',
-      locale: Locale('en', 'GB'),
-    ),
-    LanguageOption(
-      code: 'es',
-      nativeName: 'Español',
-      flag: '🇪🇸',
-      locale: Locale('es', 'ES'),
-    ),
-    LanguageOption(
-      code: 'fr',
-      nativeName: 'Français',
-      flag: '🇫🇷',
-      locale: Locale('fr', 'FR'),
-    ),
-    LanguageOption(
-      code: 'de',
-      nativeName: 'Deutsch',
-      flag: '🇩🇪',
-      locale: Locale('de', 'DE'),
-    ),
-    LanguageOption(
-      code: 'pt',
-      nativeName: 'Português',
-      flag: '🇵🇹',
-      locale: Locale('pt', 'PT'),
-    ),
+    LanguageOption(code: automaticCode, nativeName: 'Automatico · Telefono', flag: '🌐', locale: Locale('und')),
+    LanguageOption(code: 'it', nativeName: 'Italiano', flag: '🇮🇹', locale: Locale('it', 'IT')),
+    LanguageOption(code: 'en', nativeName: 'English', flag: '🇬🇧', locale: Locale('en', 'GB')),
+    LanguageOption(code: 'es', nativeName: 'Español', flag: '🇪🇸', locale: Locale('es', 'ES')),
+    LanguageOption(code: 'fr', nativeName: 'Français', flag: '🇫🇷', locale: Locale('fr', 'FR')),
+    LanguageOption(code: 'de', nativeName: 'Deutsch', flag: '🇩🇪', locale: Locale('de', 'DE')),
+    LanguageOption(code: 'pt', nativeName: 'Português', flag: '🇵🇹', locale: Locale('pt', 'PT')),
   ];
 
   static const Map<String, Map<String, String>> _strings = {
@@ -93,23 +57,17 @@ class LanguageService {
       'choose_plan': 'Scegli il piano più adatto',
       'technology_cares': 'Tecnologia che si prende cura di te.',
       'powered_by': 'Powered by KING OF LINE & Kai',
-      'instructions_intro':
-          'SaluteRisponde ti aiuta a orientarti tra domande sulla salute, documenti sanitari, appuntamenti e promemoria. È uno strumento informativo e non sostituisce il medico.',
+      'instructions_intro': 'SaluteRisponde ti aiuta a orientarti tra domande sulla salute, documenti sanitari, appuntamenti e promemoria. È uno strumento informativo e non sostituisce il medico.',
       'instructions_chat_title': 'Fai una domanda',
-      'instructions_chat_body':
-          'Apri la chat e scrivi la tua domanda. Puoi anche allegare una foto o un PDF di un documento sanitario. Le risposte sono informative.',
+      'instructions_chat_body': 'Apri la chat e scrivi la tua domanda. Puoi anche allegare una foto o un PDF di un documento sanitario. Le risposte sono informative.',
       'instructions_docs_title': 'Esami e referti',
-      'instructions_docs_body':
-          'Fotografa oppure scegli un documento già presente sul telefono, salvalo nel tuo archivio e usa “Analizza e spiegami” per ottenere una spiegazione semplice.',
+      'instructions_docs_body': 'Fotografa oppure scegli un documento già presente sul telefono, salvalo nel tuo archivio e usa “Analizza e spiegami” per ottenere una spiegazione semplice.',
       'instructions_agenda_title': 'Agenda Salute',
-      'instructions_agenda_body':
-          'Salva visite e appuntamenti con data e ora per tenere sotto controllo gli impegni sanitari.',
+      'instructions_agenda_body': 'Salva visite e appuntamenti con data e ora per tenere sotto controllo gli impegni sanitari.',
       'instructions_meds_title': 'Promemoria Farmaci',
-      'instructions_meds_body':
-          'Inserisci farmaci o integratori e imposta l’orario del promemoria. Puoi modificare o cancellare ogni voce.',
+      'instructions_meds_body': 'Inserisci farmaci o integratori e imposta l’orario del promemoria. Puoi modificare o cancellare ogni voce.',
       'instructions_safety_title': 'Sicurezza',
-      'instructions_safety_body':
-          'SaluteRisponde non formula diagnosi definitive e non sostituisce un professionista sanitario. In caso di emergenza usa i numeri di soccorso.',
+      'instructions_safety_body': 'SaluteRisponde non formula diagnosi definitive e non sostituisce un professionista sanitario. In caso di emergenza usa i numeri di soccorso.',
     },
     'en': {
       'language': 'Language',
@@ -133,23 +91,17 @@ class LanguageService {
       'choose_plan': 'Choose the plan that suits you',
       'technology_cares': 'Technology that takes care of you.',
       'powered_by': 'Powered by KING OF LINE & Kai',
-      'instructions_intro':
-          'SaluteRisponde helps you navigate health questions, medical documents, appointments and reminders. It is an informational tool and does not replace a doctor.',
+      'instructions_intro': 'SaluteRisponde helps you navigate health questions, medical documents, appointments and reminders. It is an informational tool and does not replace a doctor.',
       'instructions_chat_title': 'Ask a question',
-      'instructions_chat_body':
-          'Open the chat and type your question. You can also attach a photo or PDF of a medical document. Answers are for information only.',
+      'instructions_chat_body': 'Open the chat and type your question. You can also attach a photo or PDF of a medical document. Answers are for information only.',
       'instructions_docs_title': 'Tests and reports',
-      'instructions_docs_body':
-          'Take a photo or choose a document already on your phone, save it in your archive and use “Analyze and explain” to get a simple explanation.',
+      'instructions_docs_body': 'Take a photo or choose a document already on your phone, save it in your archive and use “Analyze and explain” to get a simple explanation.',
       'instructions_agenda_title': 'Health Agenda',
-      'instructions_agenda_body':
-          'Save medical visits and appointments with date and time to keep your health commitments organized.',
+      'instructions_agenda_body': 'Save medical visits and appointments with date and time to keep your health commitments organized.',
       'instructions_meds_title': 'Medicine Reminders',
-      'instructions_meds_body':
-          'Add medicines or supplements and set a reminder time. You can edit or delete each item.',
+      'instructions_meds_body': 'Add medicines or supplements and set a reminder time. You can edit or delete each item.',
       'instructions_safety_title': 'Safety',
-      'instructions_safety_body':
-          'SaluteRisponde does not provide definitive diagnoses and does not replace a healthcare professional. In an emergency, use the emergency numbers.',
+      'instructions_safety_body': 'SaluteRisponde does not provide definitive diagnoses and does not replace a healthcare professional. In an emergency, use the emergency numbers.',
     },
     'es': {
       'language': 'Idioma',
@@ -173,23 +125,17 @@ class LanguageService {
       'choose_plan': 'Elige el plan más adecuado',
       'technology_cares': 'Tecnología que cuida de ti.',
       'powered_by': 'Powered by KING OF LINE & Kai',
-      'instructions_intro':
-          'SaluteRisponde te ayuda con preguntas de salud, documentos médicos, citas y recordatorios. Es una herramienta informativa y no sustituye al médico.',
+      'instructions_intro': 'SaluteRisponde te ayuda con preguntas de salud, documentos médicos, citas y recordatorios. Es una herramienta informativa y no sustituye al médico.',
       'instructions_chat_title': 'Haz una pregunta',
-      'instructions_chat_body':
-          'Abre el chat y escribe tu pregunta. También puedes adjuntar una foto o un PDF de un documento médico. Las respuestas son informativas.',
+      'instructions_chat_body': 'Abre el chat y escribe tu pregunta. También puedes adjuntar una foto o un PDF de un documento médico. Las respuestas son informativas.',
       'instructions_docs_title': 'Pruebas e informes',
-      'instructions_docs_body':
-          'Haz una foto o elige un documento guardado en el teléfono, guárdalo en tu archivo y usa “Analizar y explicar” para recibir una explicación sencilla.',
+      'instructions_docs_body': 'Haz una foto o elige un documento guardado en el teléfono, guárdalo en tu archivo y usa “Analizar y explicar” para recibir una explicación sencilla.',
       'instructions_agenda_title': 'Agenda de Salud',
-      'instructions_agenda_body':
-          'Guarda visitas y citas con fecha y hora para organizar tus compromisos sanitarios.',
+      'instructions_agenda_body': 'Guarda visitas y citas con fecha y hora para organizar tus compromisos sanitarios.',
       'instructions_meds_title': 'Recordatorios de medicación',
-      'instructions_meds_body':
-          'Añade medicamentos o suplementos y establece una hora de recordatorio. Puedes modificar o eliminar cada elemento.',
+      'instructions_meds_body': 'Añade medicamentos o suplementos y establece una hora de recordatorio. Puedes modificar o eliminar cada elemento.',
       'instructions_safety_title': 'Seguridad',
-      'instructions_safety_body':
-          'SaluteRisponde no realiza diagnósticos definitivos ni sustituye a un profesional sanitario. En una emergencia utiliza los números de emergencia.',
+      'instructions_safety_body': 'SaluteRisponde no realiza diagnósticos definitivos ni sustituye a un profesional sanitario. En una emergencia utiliza los números de emergencia.',
     },
     'fr': {
       'language': 'Langue',
@@ -213,23 +159,17 @@ class LanguageService {
       'choose_plan': 'Choisissez la formule adaptée',
       'technology_cares': 'Une technologie qui prend soin de vous.',
       'powered_by': 'Powered by KING OF LINE & Kai',
-      'instructions_intro':
-          'SaluteRisponde vous aide à vous orienter dans vos questions de santé, documents médicaux, rendez-vous et rappels. Cet outil est informatif et ne remplace pas un médecin.',
+      'instructions_intro': 'SaluteRisponde vous aide à vous orienter dans vos questions de santé, documents médicaux, rendez-vous et rappels. Cet outil est informatif et ne remplace pas un médecin.',
       'instructions_chat_title': 'Poser une question',
-      'instructions_chat_body':
-          'Ouvrez le chat et saisissez votre question. Vous pouvez aussi joindre une photo ou un PDF d’un document médical. Les réponses sont informatives.',
+      'instructions_chat_body': 'Ouvrez le chat et saisissez votre question. Vous pouvez aussi joindre une photo ou un PDF d’un document médical. Les réponses sont informatives.',
       'instructions_docs_title': 'Examens et comptes rendus',
-      'instructions_docs_body':
-          'Prenez une photo ou choisissez un document déjà présent sur le téléphone, enregistrez-le dans vos archives puis utilisez “Analyser et expliquer”.',
+      'instructions_docs_body': 'Prenez une photo ou choisissez un document déjà présent sur le téléphone, enregistrez-le dans vos archives puis utilisez “Analyser et expliquer”.',
       'instructions_agenda_title': 'Agenda Santé',
-      'instructions_agenda_body':
-          'Enregistrez vos consultations et rendez-vous avec leur date et leur heure pour mieux organiser votre suivi.',
+      'instructions_agenda_body': 'Enregistrez vos consultations et rendez-vous avec leur date et leur heure pour mieux organiser votre suivi.',
       'instructions_meds_title': 'Rappels Médicaments',
-      'instructions_meds_body':
-          'Ajoutez des médicaments ou compléments et définissez une heure de rappel. Chaque élément peut être modifié ou supprimé.',
+      'instructions_meds_body': 'Ajoutez des médicaments ou compléments et définissez une heure de rappel. Chaque élément peut être modifié ou supprimé.',
       'instructions_safety_title': 'Sécurité',
-      'instructions_safety_body':
-          'SaluteRisponde ne fournit pas de diagnostic définitif et ne remplace pas un professionnel de santé. En cas d’urgence, utilisez les numéros d’urgence.',
+      'instructions_safety_body': 'SaluteRisponde ne fournit pas de diagnostic définitif et ne remplace pas un professionnel de santé. En cas d’urgence, utilisez les numéros d’urgence.',
     },
     'de': {
       'language': 'Sprache',
@@ -253,23 +193,17 @@ class LanguageService {
       'choose_plan': 'Wähle den passenden Plan',
       'technology_cares': 'Technologie, die sich um dich kümmert.',
       'powered_by': 'Powered by KING OF LINE & Kai',
-      'instructions_intro':
-          'SaluteRisponde hilft bei Gesundheitsfragen, medizinischen Dokumenten, Terminen und Erinnerungen. Die App dient der Information und ersetzt keinen Arzt.',
+      'instructions_intro': 'SaluteRisponde hilft bei Gesundheitsfragen, medizinischen Dokumenten, Terminen und Erinnerungen. Die App dient der Information und ersetzt keinen Arzt.',
       'instructions_chat_title': 'Frage stellen',
-      'instructions_chat_body':
-          'Öffne den Chat und gib deine Frage ein. Du kannst auch ein Foto oder PDF eines medizinischen Dokuments anhängen. Die Antworten dienen der Information.',
+      'instructions_chat_body': 'Öffne den Chat und gib deine Frage ein. Du kannst auch ein Foto oder PDF eines medizinischen Dokuments anhängen. Die Antworten dienen der Information.',
       'instructions_docs_title': 'Befunde und Berichte',
-      'instructions_docs_body':
-          'Fotografiere ein Dokument oder wähle eine Datei auf dem Telefon, speichere sie im Archiv und nutze „Analysieren und erklären“ für eine einfache Erklärung.',
+      'instructions_docs_body': 'Fotografiere ein Dokument oder wähle eine Datei auf dem Telefon, speichere sie im Archiv und nutze „Analysieren und erklären“ für eine einfache Erklärung.',
       'instructions_agenda_title': 'Gesundheitskalender',
-      'instructions_agenda_body':
-          'Speichere Arzttermine und Untersuchungen mit Datum und Uhrzeit, damit du deine Gesundheitsplanung im Blick behältst.',
+      'instructions_agenda_body': 'Speichere Arzttermine und Untersuchungen mit Datum und Uhrzeit, damit du deine Gesundheitsplanung im Blick behältst.',
       'instructions_meds_title': 'Medikamentenerinnerungen',
-      'instructions_meds_body':
-          'Füge Medikamente oder Nahrungsergänzungsmittel hinzu und lege eine Erinnerungszeit fest. Jeder Eintrag kann geändert oder gelöscht werden.',
+      'instructions_meds_body': 'Füge Medikamente oder Nahrungsergänzungsmittel hinzu und lege eine Erinnerungszeit fest. Jeder Eintrag kann geändert oder gelöscht werden.',
       'instructions_safety_title': 'Sicherheit',
-      'instructions_safety_body':
-          'SaluteRisponde stellt keine endgültigen Diagnosen und ersetzt kein medizinisches Fachpersonal. Im Notfall nutze die Notrufnummern.',
+      'instructions_safety_body': 'SaluteRisponde stellt keine endgültigen Diagnosen und ersetzt kein medizinisches Fachpersonal. Im Notfall nutze die Notrufnummern.',
     },
     'pt': {
       'language': 'Idioma',
@@ -293,30 +227,842 @@ class LanguageService {
       'choose_plan': 'Escolha o plano mais adequado',
       'technology_cares': 'Tecnologia que cuida de si.',
       'powered_by': 'Powered by KING OF LINE & Kai',
-      'instructions_intro':
-          'SaluteRisponde ajuda com questões de saúde, documentos médicos, consultas e lembretes. É uma ferramenta informativa e não substitui um médico.',
+      'instructions_intro': 'SaluteRisponde ajuda com questões de saúde, documentos médicos, consultas e lembretes. É uma ferramenta informativa e não substitui um médico.',
       'instructions_chat_title': 'Fazer uma pergunta',
-      'instructions_chat_body':
-          'Abra o chat e escreva a sua pergunta. Também pode anexar uma foto ou PDF de um documento médico. As respostas são informativas.',
+      'instructions_chat_body': 'Abra o chat e escreva a sua pergunta. Também pode anexar uma foto ou PDF de um documento médico. As respostas são informativas.',
       'instructions_docs_title': 'Exames e relatórios',
-      'instructions_docs_body':
-          'Tire uma fotografia ou escolha um documento no telefone, guarde-o no arquivo e use “Analisar e explicar” para obter uma explicação simples.',
+      'instructions_docs_body': 'Tire uma fotografia ou escolha um documento no telefone, guarde-o no arquivo e use “Analisar e explicar” para obter uma explicação simples.',
       'instructions_agenda_title': 'Agenda de Saúde',
-      'instructions_agenda_body':
-          'Guarde consultas e compromissos com data e hora para manter a sua organização de saúde.',
+      'instructions_agenda_body': 'Guarde consultas e compromissos com data e hora para manter a sua organização de saúde.',
       'instructions_meds_title': 'Lembretes de medicação',
-      'instructions_meds_body':
-          'Adicione medicamentos ou suplementos e defina uma hora para o lembrete. Pode editar ou eliminar cada item.',
+      'instructions_meds_body': 'Adicione medicamentos ou suplementos e defina uma hora para o lembrete. Pode editar ou eliminar cada item.',
       'instructions_safety_title': 'Segurança',
-      'instructions_safety_body':
-          'SaluteRisponde não fornece diagnósticos definitivos e não substitui um profissional de saúde. Em caso de emergência, utilize os números de emergência.',
+      'instructions_safety_body': 'SaluteRisponde não fornece diagnósticos definitivos e não substitui um profissional de saúde. Em caso de emergência, utilize os números de emergência.',
+    },
+  };
+
+  static const Map<String, Map<String, String>> _ui = {
+    'it': {
+      'Automatico · Telefono': 'Automatico · Telefono',
+      'Modalità collaudo': 'Modalità collaudo',
+      'Attivare la modalità di collaudo interna con risposte illimitate?': 'Attivare la modalità di collaudo interna con risposte illimitate?',
+      'ANNULLA': 'ANNULLA',
+      'ATTIVA TESTER': 'ATTIVA TESTER',
+      'Modalità collaudo attiva: risposte illimitate.': 'Modalità collaudo attiva: risposte illimitate.',
+      'Hai utilizzato le 3 risposte gratuite': 'Hai utilizzato le 3 risposte gratuite',
+      'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.': 'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.',
+      'VEDI PLUS E PRO': 'VEDI PLUS E PRO',
+      'NON ORA': 'NON ORA',
+      'La foto deve avere una dimensione massima di 10 MB.': 'La foto deve avere una dimensione massima di 10 MB.',
+      'L’immagine deve avere una dimensione massima di 10 MB.': 'L’immagine deve avere una dimensione massima di 10 MB.',
+      'Non riesco ad accedere al PDF selezionato.': 'Non riesco ad accedere al PDF selezionato.',
+      'Il PDF deve avere una dimensione massima di 10 MB.': 'Il PDF deve avere una dimensione massima di 10 MB.',
+      'Allega alla domanda': 'Allega alla domanda',
+      'Foto, immagine dalla galleria oppure PDF.': 'Foto, immagine dalla galleria oppure PDF.',
+      'Scatta una foto': 'Scatta una foto',
+      'Scegli dalla galleria': 'Scegli dalla galleria',
+      'Allega un PDF': 'Allega un PDF',
+      'L’allegato non è più disponibile. Selezionalo di nuovo.': 'L’allegato non è più disponibile. Selezionalo di nuovo.',
+      'Analizza e spiegami questo allegato sanitario.': 'Analizza e spiegami questo allegato sanitario.',
+      'Salute Risponde sta rispondendo…': 'Salute Risponde sta rispondendo…',
+      'Salute Risponde sta analizzando l’allegato…': 'Salute Risponde sta analizzando l’allegato…',
+      'Salute Risponde sta elaborando la risposta, ancora qualche secondo…': 'Salute Risponde sta elaborando la risposta, ancora qualche secondo…',
+      'Analisi dell’allegato in corso, ancora qualche secondo…': 'Analisi dell’allegato in corso, ancora qualche secondo…',
+      'Fai una domanda': 'Fai una domanda',
+      'COLLAUDO • risposte illimitate': 'COLLAUDO • risposte illimitate',
+      'Hai terminato le 3 risposte gratuite': 'Hai terminato le 3 risposte gratuite',
+      'Continua con Salute Risponde scegliendo PLUS o PRO.': 'Continua con Salute Risponde scegliendo PLUS o PRO.',
+      'Rimuovi allegato': 'Rimuovi allegato',
+      'Allega foto o PDF': 'Allega foto o PDF',
+      'Scegli PLUS o PRO per continuare': 'Scegli PLUS o PRO per continuare',
+      'Scrivi una domanda o allega un esame...': 'Scrivi una domanda o allega un esame...',
+      'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.': 'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.',
+      'Aggiungi un documento': 'Aggiungi un documento',
+      'Fotografa il documento oppure scegli un file già salvato.': 'Fotografa il documento oppure scegli un file già salvato.',
+      'Scegli dalla galleria o dai file': 'Scegli dalla galleria o dai file',
+      'Seleziona prima un documento.': 'Seleziona prima un documento.',
+      'Documento salvato nel tuo archivio.': 'Documento salvato nel tuo archivio.',
+      'Non è stato possibile salvare il documento.': 'Non è stato possibile salvare il documento.',
+      'Documento': 'Documento',
+      'Il file non è più disponibile sul dispositivo.': 'Il file non è più disponibile sul dispositivo.',
+      'Non riesco ad aprire questo PDF con le app disponibili.': 'Non riesco ad aprire questo PDF con le app disponibili.',
+      'Errore durante l’apertura del documento.': 'Errore durante l’apertura del documento.',
+      'Analizzare il documento?': 'Analizzare il documento?',
+      'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.': 'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.',
+      'ANALIZZA': 'ANALIZZA',
+      'Non è stato possibile analizzare il documento.': 'Non è stato possibile analizzare il documento.',
+      'Esami e referti': 'Esami e referti',
+      'Fotografa o scegli un documento': 'Fotografa o scegli un documento',
+      'Pronto per essere salvato': 'Pronto per essere salvato',
+      'Salva nel mio archivio': 'Salva nel mio archivio',
+      'I miei documenti': 'I miei documenti',
+      'Nessun documento salvato.': 'Nessun documento salvato.',
+      'Selezionato • usa Apri per visualizzarlo': 'Selezionato • usa Apri per visualizzarlo',
+      'Tocca per selezionare • usa Apri per visualizzarlo': 'Tocca per selezionare • usa Apri per visualizzarlo',
+      'Apri': 'Apri',
+      'Elimina': 'Elimina',
+      'Analisi in corso…': 'Analisi in corso…',
+      'Analizza e spiegami': 'Analizza e spiegami',
+      'Spiegazione del documento': 'Spiegazione del documento',
+      'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.': 'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.',
+      'Impossibile visualizzare questa immagine.': 'Impossibile visualizzare questa immagine.',
+      'Appuntamento salvato.': 'Appuntamento salvato.',
+      'Agenda Salute': 'Agenda Salute',
+      'Nuova visita': 'Nuova visita',
+      'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.': 'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.',
+      'Visita': 'Visita',
+      'Inserisci il tipo di visita o lo specialista.': 'Inserisci il tipo di visita o lo specialista.',
+      'Visita / specialista': 'Visita / specialista',
+      'Es. Dentista': 'Es. Dentista',
+      'Salva appuntamento': 'Salva appuntamento',
+      'Promemoria farmaci': 'Promemoria farmaci',
+      'Aggiungi': 'Aggiungi',
+      'Nessun promemoria farmaco impostato.': 'Nessun promemoria farmaco impostato.',
+      'Farmaco': 'Farmaco',
+      'Modifica': 'Modifica',
+      'Inserisci il nome del farmaco.': 'Inserisci il nome del farmaco.',
+      'Modifica promemoria': 'Modifica promemoria',
+      'Nuovo promemoria': 'Nuovo promemoria',
+      'Farmaco / integratore': 'Farmaco / integratore',
+      'Salva modifiche': 'Salva modifiche',
+      'Salva e attiva promemoria': 'Salva e attiva promemoria',
+      'Impossibile aprire il telefono.': 'Impossibile aprire il telefono.',
+      'Aggiungi contatto sanitario': 'Aggiungi contatto sanitario',
+      'Modifica contatto': 'Modifica contatto',
+      'Nome': 'Nome',
+      'Ruolo / specialità': 'Ruolo / specialità',
+      'Es. Medico di base, Cardiologo': 'Es. Medico di base, Cardiologo',
+      'Telefono': 'Telefono',
+      'Nota (facoltativa)': 'Nota (facoltativa)',
+      'SALVA': 'SALVA',
+      'Numero unico emergenze': 'Numero unico emergenze',
+      'Emergenza sanitaria': 'Emergenza sanitaria',
+      'Polizia di Stato': 'Polizia di Stato',
+      'Vigili del Fuoco': 'Vigili del Fuoco',
+      'Guardia di Finanza': 'Guardia di Finanza',
+      'Telefono Azzurro': 'Telefono Azzurro',
+      'Numeri utili': 'Numeri utili',
+      'Numeri nazionali': 'Numeri nazionali',
+      'I miei contatti sanitari': 'I miei contatti sanitari',
+      'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.': 'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.',
+      'Contatto': 'Contatto',
+      'Aggiungi contatto': 'Aggiungi contatto',
+      'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.': 'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.',
+      'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.': 'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.',
+      'Piani Salute Risponde': 'Piani Salute Risponde',
+      'Gratis': 'Gratis',
+      '3 risposte gratuite': '3 risposte gratuite',
+      '1 esame o referto': '1 esame o referto',
+      'Avvisi di sicurezza sempre disponibili': 'Avvisi di sicurezza sempre disponibili',
+      'PIANO ATTUALE': 'PIANO ATTUALE',
+      'Prezzo da definire / mese': 'Prezzo da definire / mese',
+      'Più consultazioni': 'Più consultazioni',
+      'Più documenti': 'Più documenti',
+      'Cronologia': 'Cronologia',
+      'SCEGLI PLUS': 'SCEGLI PLUS',
+      'Analisi avanzata documenti': 'Analisi avanzata documenti',
+      'Riepilogo per il medico': 'Riepilogo per il medico',
+      'Preparazione visita': 'Preparazione visita',
+      'Funzioni avanzate': 'Funzioni avanzate',
+      'SCEGLI PRO': 'SCEGLI PRO',
+      'ATTIVO': 'ATTIVO',
+      'Modalità TESTER disattivata. Piano FREE ripristinato.': 'Modalità TESTER disattivata. Piano FREE ripristinato.',
+      'Account Salute Risponde': 'Account Salute Risponde',
+      'ACCEDI': 'ACCEDI',
+      'ISCRIVITI': 'ISCRIVITI',
+      'Registrazione non ancora attiva.': 'Registrazione non ancora attiva.',
+      'Accesso non ancora attivo.': 'Accesso non ancora attivo.',
+      'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.': 'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.',
+      'Email': 'Email',
+      'Password': 'Password',
+      'PDF, JPG, PNG o WEBP': 'PDF, JPG, PNG o WEBP',
+      '© 2026 SaluteRisponde': '© 2026 SaluteRisponde',
+    },
+    'en': {
+      'Automatico · Telefono': 'Automatic · Device',
+      'Modalità collaudo': 'Test mode',
+      'Attivare la modalità di collaudo interna con risposte illimitate?': 'Enable internal test mode with unlimited answers?',
+      'ANNULLA': 'CANCEL',
+      'ATTIVA TESTER': 'ENABLE TESTER',
+      'Modalità collaudo attiva: risposte illimitate.': 'Test mode active: unlimited answers.',
+      'Hai utilizzato le 3 risposte gratuite': 'You have used your 3 free answers',
+      'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.': 'To continue chatting with SaluteRisponde, choose the PLUS or PRO plan.',
+      'VEDI PLUS E PRO': 'VIEW PLUS AND PRO',
+      'NON ORA': 'NOT NOW',
+      'La foto deve avere una dimensione massima di 10 MB.': 'The photo must be no larger than 10 MB.',
+      'L’immagine deve avere una dimensione massima di 10 MB.': 'The image must be no larger than 10 MB.',
+      'Non riesco ad accedere al PDF selezionato.': 'I cannot access the selected PDF.',
+      'Il PDF deve avere una dimensione massima di 10 MB.': 'The PDF must be no larger than 10 MB.',
+      'Allega alla domanda': 'Attach to your question',
+      'Foto, immagine dalla galleria oppure PDF.': 'Photo, gallery image or PDF.',
+      'Scatta una foto': 'Take a photo',
+      'Scegli dalla galleria': 'Choose from gallery',
+      'Allega un PDF': 'Attach a PDF',
+      'L’allegato non è più disponibile. Selezionalo di nuovo.': 'The attachment is no longer available. Select it again.',
+      'Analizza e spiegami questo allegato sanitario.': 'Analyze and explain this medical attachment.',
+      'Salute Risponde sta rispondendo…': 'SaluteRisponde is replying…',
+      'Salute Risponde sta analizzando l’allegato…': 'SaluteRisponde is analyzing the attachment…',
+      'Salute Risponde sta elaborando la risposta, ancora qualche secondo…': 'SaluteRisponde is preparing the answer, just a few more seconds…',
+      'Analisi dell’allegato in corso, ancora qualche secondo…': 'Attachment analysis in progress, just a few more seconds…',
+      'Fai una domanda': 'Ask a question',
+      'COLLAUDO • risposte illimitate': 'TEST • unlimited answers',
+      'Hai terminato le 3 risposte gratuite': 'You have used all 3 free answers',
+      'Continua con Salute Risponde scegliendo PLUS o PRO.': 'Continue with SaluteRisponde by choosing PLUS or PRO.',
+      'Rimuovi allegato': 'Remove attachment',
+      'Allega foto o PDF': 'Attach photo or PDF',
+      'Scegli PLUS o PRO per continuare': 'Choose PLUS or PRO to continue',
+      'Scrivi una domanda o allega un esame...': 'Write a question or attach a test/report...',
+      'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.': 'Hello, I’m SaluteRisponde. I can help you better understand symptoms, tests and reports. I do not replace a doctor.',
+      'Aggiungi un documento': 'Add a document',
+      'Fotografa il documento oppure scegli un file già salvato.': 'Photograph the document or choose an already saved file.',
+      'Scegli dalla galleria o dai file': 'Choose from gallery or files',
+      'Seleziona prima un documento.': 'Select a document first.',
+      'Documento salvato nel tuo archivio.': 'Document saved in your archive.',
+      'Non è stato possibile salvare il documento.': 'The document could not be saved.',
+      'Documento': 'Document',
+      'Il file non è più disponibile sul dispositivo.': 'The file is no longer available on the device.',
+      'Non riesco ad aprire questo PDF con le app disponibili.': 'I cannot open this PDF with the available apps.',
+      'Errore durante l’apertura del documento.': 'Error while opening the document.',
+      'Analizzare il documento?': 'Analyze the document?',
+      'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.': 'The document will be sent securely to the analysis service to read and explain it. Do not send documents belonging to other people without their consent.',
+      'ANALIZZA': 'ANALYZE',
+      'Non è stato possibile analizzare il documento.': 'The document could not be analyzed.',
+      'Esami e referti': 'Tests and reports',
+      'Fotografa o scegli un documento': 'Photograph or choose a document',
+      'Pronto per essere salvato': 'Ready to be saved',
+      'Salva nel mio archivio': 'Save to my archive',
+      'I miei documenti': 'My documents',
+      'Nessun documento salvato.': 'No saved documents.',
+      'Selezionato • usa Apri per visualizzarlo': 'Selected • use Open to view it',
+      'Tocca per selezionare • usa Apri per visualizzarlo': 'Tap to select • use Open to view it',
+      'Apri': 'Open',
+      'Elimina': 'Delete',
+      'Analisi in corso…': 'Analyzing…',
+      'Analizza e spiegami': 'Analyze and explain',
+      'Spiegazione del documento': 'Document explanation',
+      'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.': 'This explanation is for information only and does not replace the doctor who requested or signed the document.',
+      'Impossibile visualizzare questa immagine.': 'Unable to display this image.',
+      'Appuntamento salvato.': 'Appointment saved.',
+      'Agenda Salute': 'Health Agenda',
+      'Nuova visita': 'New appointment',
+      'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.': 'No appointments.\nTap “New appointment” to add one.',
+      'Visita': 'Appointment',
+      'Inserisci il tipo di visita o lo specialista.': 'Enter the appointment type or specialist.',
+      'Visita / specialista': 'Appointment / specialist',
+      'Es. Dentista': 'E.g. Dentist',
+      'Salva appuntamento': 'Save appointment',
+      'Promemoria farmaci': 'Medicine reminders',
+      'Aggiungi': 'Add',
+      'Nessun promemoria farmaco impostato.': 'No medicine reminders set.',
+      'Farmaco': 'Medicine',
+      'Modifica': 'Edit',
+      'Inserisci il nome del farmaco.': 'Enter the medicine name.',
+      'Modifica promemoria': 'Edit reminder',
+      'Nuovo promemoria': 'New reminder',
+      'Farmaco / integratore': 'Medicine / supplement',
+      'Salva modifiche': 'Save changes',
+      'Salva e attiva promemoria': 'Save and enable reminder',
+      'Impossibile aprire il telefono.': 'Unable to open the phone app.',
+      'Aggiungi contatto sanitario': 'Add healthcare contact',
+      'Modifica contatto': 'Edit contact',
+      'Nome': 'Name',
+      'Ruolo / specialità': 'Role / specialty',
+      'Es. Medico di base, Cardiologo': 'E.g. GP, Cardiologist',
+      'Telefono': 'Phone',
+      'Nota (facoltativa)': 'Note (optional)',
+      'SALVA': 'SAVE',
+      'Numero unico emergenze': 'Single emergency number',
+      'Emergenza sanitaria': 'Medical emergency',
+      'Polizia di Stato': 'State Police',
+      'Vigili del Fuoco': 'Fire Brigade',
+      'Guardia di Finanza': 'Financial Police',
+      'Telefono Azzurro': 'Telefono Azzurro',
+      'Numeri utili': 'Useful numbers',
+      'Numeri nazionali': 'National numbers',
+      'I miei contatti sanitari': 'My healthcare contacts',
+      'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.': 'Add your doctor, a specialist, a pharmacy or another trusted contact.',
+      'Contatto': 'Contact',
+      'Aggiungi contatto': 'Add contact',
+      'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.': 'Local numbers will be added after official verification for each geographic area.',
+      'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.': 'The plan will be available for activation through Google Play in the published version.',
+      'Piani Salute Risponde': 'SaluteRisponde plans',
+      'Gratis': 'Free',
+      '3 risposte gratuite': '3 free answers',
+      '1 esame o referto': '1 test or report',
+      'Avvisi di sicurezza sempre disponibili': 'Safety notices always available',
+      'PIANO ATTUALE': 'CURRENT PLAN',
+      'Prezzo da definire / mese': 'Price to be defined / month',
+      'Più consultazioni': 'More consultations',
+      'Più documenti': 'More documents',
+      'Cronologia': 'History',
+      'SCEGLI PLUS': 'CHOOSE PLUS',
+      'Analisi avanzata documenti': 'Advanced document analysis',
+      'Riepilogo per il medico': 'Summary for your doctor',
+      'Preparazione visita': 'Appointment preparation',
+      'Funzioni avanzate': 'Advanced features',
+      'SCEGLI PRO': 'CHOOSE PRO',
+      'ATTIVO': 'ACTIVE',
+      'Modalità TESTER disattivata. Piano FREE ripristinato.': 'TESTER mode disabled. FREE plan restored.',
+      'Account Salute Risponde': 'SaluteRisponde account',
+      'ACCEDI': 'SIGN IN',
+      'ISCRIVITI': 'REGISTER',
+      'Registrazione non ancora attiva.': 'Registration is not active yet.',
+      'Accesso non ancora attivo.': 'Sign-in is not active yet.',
+      'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.': 'Safe. Reliable. Human.\nSaluteRisponde provides health information and guidance and does not replace a doctor. In an emergency, contact emergency medical services.',
+      'Email': 'Email',
+      'Password': 'Password',
+      'PDF, JPG, PNG o WEBP': 'PDF, JPG, PNG or WEBP',
+      '© 2026 SaluteRisponde': '© 2026 SaluteRisponde',
+    },
+    'es': {
+      'Automatico · Telefono': 'Automático · Dispositivo',
+      'Modalità collaudo': 'Modo de prueba',
+      'Attivare la modalità di collaudo interna con risposte illimitate?': '¿Activar el modo de prueba interno con respuestas ilimitadas?',
+      'ANNULLA': 'CANCELAR',
+      'ATTIVA TESTER': 'ACTIVAR TESTER',
+      'Modalità collaudo attiva: risposte illimitate.': 'Modo de prueba activo: respuestas ilimitadas.',
+      'Hai utilizzato le 3 risposte gratuite': 'Has utilizado tus 3 respuestas gratuitas',
+      'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.': 'Para seguir hablando con SaluteRisponde, elige el plan PLUS o PRO.',
+      'VEDI PLUS E PRO': 'VER PLUS Y PRO',
+      'NON ORA': 'AHORA NO',
+      'La foto deve avere una dimensione massima di 10 MB.': 'La foto no puede superar los 10 MB.',
+      'L’immagine deve avere una dimensione massima di 10 MB.': 'La imagen no puede superar los 10 MB.',
+      'Non riesco ad accedere al PDF selezionato.': 'No puedo acceder al PDF seleccionado.',
+      'Il PDF deve avere una dimensione massima di 10 MB.': 'El PDF no puede superar los 10 MB.',
+      'Allega alla domanda': 'Adjuntar a la pregunta',
+      'Foto, immagine dalla galleria oppure PDF.': 'Foto, imagen de la galería o PDF.',
+      'Scatta una foto': 'Hacer una foto',
+      'Scegli dalla galleria': 'Elegir de la galería',
+      'Allega un PDF': 'Adjuntar un PDF',
+      'L’allegato non è più disponibile. Selezionalo di nuovo.': 'El archivo adjunto ya no está disponible. Selecciónalo de nuevo.',
+      'Analizza e spiegami questo allegato sanitario.': 'Analiza y explícame este archivo médico adjunto.',
+      'Salute Risponde sta rispondendo…': 'SaluteRisponde está respondiendo…',
+      'Salute Risponde sta analizzando l’allegato…': 'SaluteRisponde está analizando el archivo adjunto…',
+      'Salute Risponde sta elaborando la risposta, ancora qualche secondo…': 'SaluteRisponde está preparando la respuesta, unos segundos más…',
+      'Analisi dell’allegato in corso, ancora qualche secondo…': 'Análisis del archivo adjunto en curso, unos segundos más…',
+      'Fai una domanda': 'Haz una pregunta',
+      'COLLAUDO • risposte illimitate': 'PRUEBA • respuestas ilimitadas',
+      'Hai terminato le 3 risposte gratuite': 'Has agotado las 3 respuestas gratuitas',
+      'Continua con Salute Risponde scegliendo PLUS o PRO.': 'Continúa con SaluteRisponde eligiendo PLUS o PRO.',
+      'Rimuovi allegato': 'Quitar archivo adjunto',
+      'Allega foto o PDF': 'Adjuntar foto o PDF',
+      'Scegli PLUS o PRO per continuare': 'Elige PLUS o PRO para continuar',
+      'Scrivi una domanda o allega un esame...': 'Escribe una pregunta o adjunta una prueba/informe...',
+      'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.': 'Hola, soy SaluteRisponde. Puedo ayudarte a comprender mejor síntomas, pruebas e informes. No sustituyo al médico.',
+      'Aggiungi un documento': 'Añadir un documento',
+      'Fotografa il documento oppure scegli un file già salvato.': 'Fotografía el documento o elige un archivo ya guardado.',
+      'Scegli dalla galleria o dai file': 'Elegir de la galería o archivos',
+      'Seleziona prima un documento.': 'Selecciona primero un documento.',
+      'Documento salvato nel tuo archivio.': 'Documento guardado en tu archivo.',
+      'Non è stato possibile salvare il documento.': 'No se pudo guardar el documento.',
+      'Documento': 'Documento',
+      'Il file non è più disponibile sul dispositivo.': 'El archivo ya no está disponible en el dispositivo.',
+      'Non riesco ad aprire questo PDF con le app disponibili.': 'No puedo abrir este PDF con las aplicaciones disponibles.',
+      'Errore durante l’apertura del documento.': 'Error al abrir el documento.',
+      'Analizzare il documento?': '¿Analizar el documento?',
+      'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.': 'El documento se enviará de forma segura al servicio de análisis para leerlo y explicarlo. No envíes documentos de otras personas sin su consentimiento.',
+      'ANALIZZA': 'ANALIZAR',
+      'Non è stato possibile analizzare il documento.': 'No se pudo analizar el documento.',
+      'Esami e referti': 'Pruebas e informes',
+      'Fotografa o scegli un documento': 'Fotografía o elige un documento',
+      'Pronto per essere salvato': 'Listo para guardar',
+      'Salva nel mio archivio': 'Guardar en mi archivo',
+      'I miei documenti': 'Mis documentos',
+      'Nessun documento salvato.': 'No hay documentos guardados.',
+      'Selezionato • usa Apri per visualizzarlo': 'Seleccionado • usa Abrir para verlo',
+      'Tocca per selezionare • usa Apri per visualizzarlo': 'Toca para seleccionar • usa Abrir para verlo',
+      'Apri': 'Abrir',
+      'Elimina': 'Eliminar',
+      'Analisi in corso…': 'Analizando…',
+      'Analizza e spiegami': 'Analizar y explicar',
+      'Spiegazione del documento': 'Explicación del documento',
+      'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.': 'Esta explicación es informativa y no sustituye al médico que solicitó o firmó el documento.',
+      'Impossibile visualizzare questa immagine.': 'No se puede mostrar esta imagen.',
+      'Appuntamento salvato.': 'Cita guardada.',
+      'Agenda Salute': 'Agenda de Salud',
+      'Nuova visita': 'Nueva cita',
+      'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.': 'No hay citas.\nPulsa «Nueva cita» para añadir una.',
+      'Visita': 'Cita',
+      'Inserisci il tipo di visita o lo specialista.': 'Introduce el tipo de cita o especialista.',
+      'Visita / specialista': 'Cita / especialista',
+      'Es. Dentista': 'Ej. Dentista',
+      'Salva appuntamento': 'Guardar cita',
+      'Promemoria farmaci': 'Recordatorios de medicación',
+      'Aggiungi': 'Añadir',
+      'Nessun promemoria farmaco impostato.': 'No hay recordatorios de medicación configurados.',
+      'Farmaco': 'Medicamento',
+      'Modifica': 'Editar',
+      'Inserisci il nome del farmaco.': 'Introduce el nombre del medicamento.',
+      'Modifica promemoria': 'Editar recordatorio',
+      'Nuovo promemoria': 'Nuevo recordatorio',
+      'Farmaco / integratore': 'Medicamento / suplemento',
+      'Salva modifiche': 'Guardar cambios',
+      'Salva e attiva promemoria': 'Guardar y activar recordatorio',
+      'Impossibile aprire il telefono.': 'No se puede abrir la aplicación de teléfono.',
+      'Aggiungi contatto sanitario': 'Añadir contacto sanitario',
+      'Modifica contatto': 'Editar contacto',
+      'Nome': 'Nombre',
+      'Ruolo / specialità': 'Función / especialidad',
+      'Es. Medico di base, Cardiologo': 'Ej. Médico de familia, Cardiólogo',
+      'Telefono': 'Teléfono',
+      'Nota (facoltativa)': 'Nota (opcional)',
+      'SALVA': 'GUARDAR',
+      'Numero unico emergenze': 'Número único de emergencias',
+      'Emergenza sanitaria': 'Emergencia sanitaria',
+      'Polizia di Stato': 'Policía del Estado',
+      'Vigili del Fuoco': 'Bomberos',
+      'Guardia di Finanza': 'Guardia de Finanzas',
+      'Telefono Azzurro': 'Telefono Azzurro',
+      'Numeri utili': 'Números útiles',
+      'Numeri nazionali': 'Números nacionales',
+      'I miei contatti sanitari': 'Mis contactos sanitarios',
+      'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.': 'Añade a tu médico, un especialista, una farmacia u otro contacto de confianza.',
+      'Contatto': 'Contacto',
+      'Aggiungi contatto': 'Añadir contacto',
+      'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.': 'Los números locales se añadirán tras la verificación oficial de cada zona geográfica.',
+      'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.': 'El plan podrá activarse a través de Google Play en la versión publicada.',
+      'Piani Salute Risponde': 'Planes SaluteRisponde',
+      'Gratis': 'Gratis',
+      '3 risposte gratuite': '3 respuestas gratuitas',
+      '1 esame o referto': '1 prueba o informe',
+      'Avvisi di sicurezza sempre disponibili': 'Avisos de seguridad siempre disponibles',
+      'PIANO ATTUALE': 'PLAN ACTUAL',
+      'Prezzo da definire / mese': 'Precio por definir / mes',
+      'Più consultazioni': 'Más consultas',
+      'Più documenti': 'Más documentos',
+      'Cronologia': 'Historial',
+      'SCEGLI PLUS': 'ELEGIR PLUS',
+      'Analisi avanzata documenti': 'Análisis avanzado de documentos',
+      'Riepilogo per il medico': 'Resumen para el médico',
+      'Preparazione visita': 'Preparación de la consulta',
+      'Funzioni avanzate': 'Funciones avanzadas',
+      'SCEGLI PRO': 'ELEGIR PRO',
+      'ATTIVO': 'ACTIVO',
+      'Modalità TESTER disattivata. Piano FREE ripristinato.': 'Modo TESTER desactivado. Plan FREE restaurado.',
+      'Account Salute Risponde': 'Cuenta SaluteRisponde',
+      'ACCEDI': 'INICIAR SESIÓN',
+      'ISCRIVITI': 'REGISTRARSE',
+      'Registrazione non ancora attiva.': 'El registro aún no está activo.',
+      'Accesso non ancora attivo.': 'El acceso aún no está activo.',
+      'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.': 'Seguro. Fiable. Humano.\nSaluteRisponde ofrece información y orientación sanitaria y no sustituye al médico. En caso de emergencia, contacta con los servicios sanitarios.',
+      'Email': 'Correo electrónico',
+      'Password': 'Contraseña',
+      'PDF, JPG, PNG o WEBP': 'PDF, JPG, PNG o WEBP',
+      '© 2026 SaluteRisponde': '© 2026 SaluteRisponde',
+    },
+    'fr': {
+      'Automatico · Telefono': 'Automatique · Appareil',
+      'Modalità collaudo': 'Mode test',
+      'Attivare la modalità di collaudo interna con risposte illimitate?': 'Activer le mode test interne avec des réponses illimitées ?',
+      'ANNULLA': 'ANNULER',
+      'ATTIVA TESTER': 'ACTIVER TESTEUR',
+      'Modalità collaudo attiva: risposte illimitate.': 'Mode test actif : réponses illimitées.',
+      'Hai utilizzato le 3 risposte gratuite': 'Vous avez utilisé vos 3 réponses gratuites',
+      'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.': 'Pour continuer à parler avec SaluteRisponde, choisissez la formule PLUS ou PRO.',
+      'VEDI PLUS E PRO': 'VOIR PLUS ET PRO',
+      'NON ORA': 'PAS MAINTENANT',
+      'La foto deve avere una dimensione massima di 10 MB.': 'La photo ne doit pas dépasser 10 Mo.',
+      'L’immagine deve avere una dimensione massima di 10 MB.': 'L’image ne doit pas dépasser 10 Mo.',
+      'Non riesco ad accedere al PDF selezionato.': 'Impossible d’accéder au PDF sélectionné.',
+      'Il PDF deve avere una dimensione massima di 10 MB.': 'Le PDF ne doit pas dépasser 10 Mo.',
+      'Allega alla domanda': 'Joindre à la question',
+      'Foto, immagine dalla galleria oppure PDF.': 'Photo, image de la galerie ou PDF.',
+      'Scatta una foto': 'Prendre une photo',
+      'Scegli dalla galleria': 'Choisir dans la galerie',
+      'Allega un PDF': 'Joindre un PDF',
+      'L’allegato non è più disponibile. Selezionalo di nuovo.': 'La pièce jointe n’est plus disponible. Sélectionnez-la à nouveau.',
+      'Analizza e spiegami questo allegato sanitario.': 'Analyse et explique-moi cette pièce jointe médicale.',
+      'Salute Risponde sta rispondendo…': 'SaluteRisponde répond…',
+      'Salute Risponde sta analizzando l’allegato…': 'SaluteRisponde analyse la pièce jointe…',
+      'Salute Risponde sta elaborando la risposta, ancora qualche secondo…': 'SaluteRisponde prépare la réponse, encore quelques secondes…',
+      'Analisi dell’allegato in corso, ancora qualche secondo…': 'Analyse de la pièce jointe en cours, encore quelques secondes…',
+      'Fai una domanda': 'Poser une question',
+      'COLLAUDO • risposte illimitate': 'TEST • réponses illimitées',
+      'Hai terminato le 3 risposte gratuite': 'Vous avez utilisé les 3 réponses gratuites',
+      'Continua con Salute Risponde scegliendo PLUS o PRO.': 'Continuez avec SaluteRisponde en choisissant PLUS ou PRO.',
+      'Rimuovi allegato': 'Supprimer la pièce jointe',
+      'Allega foto o PDF': 'Joindre une photo ou un PDF',
+      'Scegli PLUS o PRO per continuare': 'Choisissez PLUS ou PRO pour continuer',
+      'Scrivi una domanda o allega un esame...': 'Écrivez une question ou joignez un examen/compte rendu...',
+      'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.': 'Bonjour, je suis SaluteRisponde. Je peux vous aider à mieux comprendre les symptômes, examens et comptes rendus. Je ne remplace pas un médecin.',
+      'Aggiungi un documento': 'Ajouter un document',
+      'Fotografa il documento oppure scegli un file già salvato.': 'Photographiez le document ou choisissez un fichier déjà enregistré.',
+      'Scegli dalla galleria o dai file': 'Choisir dans la galerie ou les fichiers',
+      'Seleziona prima un documento.': 'Sélectionnez d’abord un document.',
+      'Documento salvato nel tuo archivio.': 'Document enregistré dans vos archives.',
+      'Non è stato possibile salvare il documento.': 'Impossible d’enregistrer le document.',
+      'Documento': 'Document',
+      'Il file non è più disponibile sul dispositivo.': 'Le fichier n’est plus disponible sur l’appareil.',
+      'Non riesco ad aprire questo PDF con le app disponibili.': 'Impossible d’ouvrir ce PDF avec les applications disponibles.',
+      'Errore durante l’apertura del documento.': 'Erreur lors de l’ouverture du document.',
+      'Analizzare il documento?': 'Analyser le document ?',
+      'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.': 'Le document sera envoyé de manière sécurisée au service d’analyse afin d’être lu et expliqué. N’envoyez pas les documents d’autres personnes sans leur consentement.',
+      'ANALIZZA': 'ANALYSER',
+      'Non è stato possibile analizzare il documento.': 'Impossible d’analyser le document.',
+      'Esami e referti': 'Examens et comptes rendus',
+      'Fotografa o scegli un documento': 'Photographier ou choisir un document',
+      'Pronto per essere salvato': 'Prêt à être enregistré',
+      'Salva nel mio archivio': 'Enregistrer dans mes archives',
+      'I miei documenti': 'Mes documents',
+      'Nessun documento salvato.': 'Aucun document enregistré.',
+      'Selezionato • usa Apri per visualizzarlo': 'Sélectionné • utilisez Ouvrir pour l’afficher',
+      'Tocca per selezionare • usa Apri per visualizzarlo': 'Touchez pour sélectionner • utilisez Ouvrir pour l’afficher',
+      'Apri': 'Ouvrir',
+      'Elimina': 'Supprimer',
+      'Analisi in corso…': 'Analyse en cours…',
+      'Analizza e spiegami': 'Analyser et expliquer',
+      'Spiegazione del documento': 'Explication du document',
+      'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.': 'Cette explication est informative et ne remplace pas le médecin qui a demandé ou signé le document.',
+      'Impossibile visualizzare questa immagine.': 'Impossible d’afficher cette image.',
+      'Appuntamento salvato.': 'Rendez-vous enregistré.',
+      'Agenda Salute': 'Agenda Santé',
+      'Nuova visita': 'Nouveau rendez-vous',
+      'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.': 'Aucun rendez-vous.\nAppuyez sur « Nouveau rendez-vous » pour en ajouter un.',
+      'Visita': 'Rendez-vous',
+      'Inserisci il tipo di visita o lo specialista.': 'Indiquez le type de rendez-vous ou le spécialiste.',
+      'Visita / specialista': 'Rendez-vous / spécialiste',
+      'Es. Dentista': 'Ex. Dentiste',
+      'Salva appuntamento': 'Enregistrer le rendez-vous',
+      'Promemoria farmaci': 'Rappels de médicaments',
+      'Aggiungi': 'Ajouter',
+      'Nessun promemoria farmaco impostato.': 'Aucun rappel de médicament défini.',
+      'Farmaco': 'Médicament',
+      'Modifica': 'Modifier',
+      'Inserisci il nome del farmaco.': 'Saisissez le nom du médicament.',
+      'Modifica promemoria': 'Modifier le rappel',
+      'Nuovo promemoria': 'Nouveau rappel',
+      'Farmaco / integratore': 'Médicament / complément',
+      'Salva modifiche': 'Enregistrer les modifications',
+      'Salva e attiva promemoria': 'Enregistrer et activer le rappel',
+      'Impossibile aprire il telefono.': 'Impossible d’ouvrir l’application Téléphone.',
+      'Aggiungi contatto sanitario': 'Ajouter un contact de santé',
+      'Modifica contatto': 'Modifier le contact',
+      'Nome': 'Nom',
+      'Ruolo / specialità': 'Rôle / spécialité',
+      'Es. Medico di base, Cardiologo': 'Ex. Médecin généraliste, Cardiologue',
+      'Telefono': 'Téléphone',
+      'Nota (facoltativa)': 'Note (facultative)',
+      'SALVA': 'ENREGISTRER',
+      'Numero unico emergenze': 'Numéro d’urgence unique',
+      'Emergenza sanitaria': 'Urgence médicale',
+      'Polizia di Stato': 'Police nationale',
+      'Vigili del Fuoco': 'Sapeurs-pompiers',
+      'Guardia di Finanza': 'Police financière',
+      'Telefono Azzurro': 'Telefono Azzurro',
+      'Numeri utili': 'Numéros utiles',
+      'Numeri nazionali': 'Numéros nationaux',
+      'I miei contatti sanitari': 'Mes contacts de santé',
+      'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.': 'Ajoutez votre médecin, un spécialiste, une pharmacie ou un autre contact de confiance.',
+      'Contatto': 'Contact',
+      'Aggiungi contatto': 'Ajouter un contact',
+      'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.': 'Les numéros locaux seront ajoutés après vérification officielle pour chaque zone géographique.',
+      'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.': 'La formule pourra être activée via Google Play dans la version publiée.',
+      'Piani Salute Risponde': 'Formules SaluteRisponde',
+      'Gratis': 'Gratuit',
+      '3 risposte gratuite': '3 réponses gratuites',
+      '1 esame o referto': '1 examen ou compte rendu',
+      'Avvisi di sicurezza sempre disponibili': 'Avis de sécurité toujours disponibles',
+      'PIANO ATTUALE': 'FORMULE ACTUELLE',
+      'Prezzo da definire / mese': 'Prix à définir / mois',
+      'Più consultazioni': 'Plus de consultations',
+      'Più documenti': 'Plus de documents',
+      'Cronologia': 'Historique',
+      'SCEGLI PLUS': 'CHOISIR PLUS',
+      'Analisi avanzata documenti': 'Analyse avancée des documents',
+      'Riepilogo per il medico': 'Résumé pour le médecin',
+      'Preparazione visita': 'Préparation du rendez-vous',
+      'Funzioni avanzate': 'Fonctions avancées',
+      'SCEGLI PRO': 'CHOISIR PRO',
+      'ATTIVO': 'ACTIF',
+      'Modalità TESTER disattivata. Piano FREE ripristinato.': 'Mode TESTEUR désactivé. Formule FREE rétablie.',
+      'Account Salute Risponde': 'Compte SaluteRisponde',
+      'ACCEDI': 'SE CONNECTER',
+      'ISCRIVITI': 'S’INSCRIRE',
+      'Registrazione non ancora attiva.': 'L’inscription n’est pas encore active.',
+      'Accesso non ancora attivo.': 'La connexion n’est pas encore active.',
+      'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.': 'Sûr. Fiable. Humain.\nSaluteRisponde fournit des informations et une orientation en santé et ne remplace pas un médecin. En cas d’urgence, contactez les services de secours.',
+      'Email': 'E-mail',
+      'Password': 'Mot de passe',
+      'PDF, JPG, PNG o WEBP': 'PDF, JPG, PNG ou WEBP',
+      '© 2026 SaluteRisponde': '© 2026 SaluteRisponde',
+    },
+    'de': {
+      'Automatico · Telefono': 'Automatisch · Gerät',
+      'Modalità collaudo': 'Testmodus',
+      'Attivare la modalità di collaudo interna con risposte illimitate?': 'Internen Testmodus mit unbegrenzten Antworten aktivieren?',
+      'ANNULLA': 'ABBRECHEN',
+      'ATTIVA TESTER': 'TESTER AKTIVIEREN',
+      'Modalità collaudo attiva: risposte illimitate.': 'Testmodus aktiv: unbegrenzte Antworten.',
+      'Hai utilizzato le 3 risposte gratuite': 'Du hast deine 3 kostenlosen Antworten verbraucht',
+      'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.': 'Um weiter mit SaluteRisponde zu sprechen, wähle den PLUS- oder PRO-Tarif.',
+      'VEDI PLUS E PRO': 'PLUS UND PRO ANSEHEN',
+      'NON ORA': 'NICHT JETZT',
+      'La foto deve avere una dimensione massima di 10 MB.': 'Das Foto darf höchstens 10 MB groß sein.',
+      'L’immagine deve avere una dimensione massima di 10 MB.': 'Das Bild darf höchstens 10 MB groß sein.',
+      'Non riesco ad accedere al PDF selezionato.': 'Auf die ausgewählte PDF-Datei kann nicht zugegriffen werden.',
+      'Il PDF deve avere una dimensione massima di 10 MB.': 'Die PDF-Datei darf höchstens 10 MB groß sein.',
+      'Allega alla domanda': 'An die Frage anhängen',
+      'Foto, immagine dalla galleria oppure PDF.': 'Foto, Galeriebild oder PDF.',
+      'Scatta una foto': 'Foto aufnehmen',
+      'Scegli dalla galleria': 'Aus Galerie wählen',
+      'Allega un PDF': 'PDF anhängen',
+      'L’allegato non è più disponibile. Selezionalo di nuovo.': 'Der Anhang ist nicht mehr verfügbar. Wähle ihn erneut aus.',
+      'Analizza e spiegami questo allegato sanitario.': 'Analysiere und erkläre diesen medizinischen Anhang.',
+      'Salute Risponde sta rispondendo…': 'SaluteRisponde antwortet…',
+      'Salute Risponde sta analizzando l’allegato…': 'SaluteRisponde analysiert den Anhang…',
+      'Salute Risponde sta elaborando la risposta, ancora qualche secondo…': 'SaluteRisponde erstellt die Antwort, noch ein paar Sekunden…',
+      'Analisi dell’allegato in corso, ancora qualche secondo…': 'Anhang wird analysiert, noch ein paar Sekunden…',
+      'Fai una domanda': 'Frage stellen',
+      'COLLAUDO • risposte illimitate': 'TEST • unbegrenzte Antworten',
+      'Hai terminato le 3 risposte gratuite': 'Du hast alle 3 kostenlosen Antworten verbraucht',
+      'Continua con Salute Risponde scegliendo PLUS o PRO.': 'Nutze SaluteRisponde weiter mit PLUS oder PRO.',
+      'Rimuovi allegato': 'Anhang entfernen',
+      'Allega foto o PDF': 'Foto oder PDF anhängen',
+      'Scegli PLUS o PRO per continuare': 'Wähle PLUS oder PRO, um fortzufahren',
+      'Scrivi una domanda o allega un esame...': 'Schreibe eine Frage oder hänge einen Befund an...',
+      'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.': 'Hallo, ich bin SaluteRisponde. Ich kann dir helfen, Symptome, Untersuchungen und Befunde besser zu verstehen. Ich ersetze keinen Arzt.',
+      'Aggiungi un documento': 'Dokument hinzufügen',
+      'Fotografa il documento oppure scegli un file già salvato.': 'Fotografiere das Dokument oder wähle eine bereits gespeicherte Datei.',
+      'Scegli dalla galleria o dai file': 'Aus Galerie oder Dateien wählen',
+      'Seleziona prima un documento.': 'Wähle zuerst ein Dokument aus.',
+      'Documento salvato nel tuo archivio.': 'Dokument in deinem Archiv gespeichert.',
+      'Non è stato possibile salvare il documento.': 'Das Dokument konnte nicht gespeichert werden.',
+      'Documento': 'Dokument',
+      'Il file non è più disponibile sul dispositivo.': 'Die Datei ist auf dem Gerät nicht mehr verfügbar.',
+      'Non riesco ad aprire questo PDF con le app disponibili.': 'Diese PDF-Datei kann mit den verfügbaren Apps nicht geöffnet werden.',
+      'Errore durante l’apertura del documento.': 'Fehler beim Öffnen des Dokuments.',
+      'Analizzare il documento?': 'Dokument analysieren?',
+      'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.': 'Das Dokument wird sicher an den Analysedienst gesendet, um es zu lesen und zu erklären. Sende keine Dokumente anderer Personen ohne deren Zustimmung.',
+      'ANALIZZA': 'ANALYSIEREN',
+      'Non è stato possibile analizzare il documento.': 'Das Dokument konnte nicht analysiert werden.',
+      'Esami e referti': 'Untersuchungen und Befunde',
+      'Fotografa o scegli un documento': 'Dokument fotografieren oder auswählen',
+      'Pronto per essere salvato': 'Bereit zum Speichern',
+      'Salva nel mio archivio': 'In meinem Archiv speichern',
+      'I miei documenti': 'Meine Dokumente',
+      'Nessun documento salvato.': 'Keine gespeicherten Dokumente.',
+      'Selezionato • usa Apri per visualizzarlo': 'Ausgewählt • mit Öffnen anzeigen',
+      'Tocca per selezionare • usa Apri per visualizzarlo': 'Antippen zum Auswählen • mit Öffnen anzeigen',
+      'Apri': 'Öffnen',
+      'Elimina': 'Löschen',
+      'Analisi in corso…': 'Analyse läuft…',
+      'Analizza e spiegami': 'Analysieren und erklären',
+      'Spiegazione del documento': 'Dokumenterklärung',
+      'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.': 'Diese Erklärung dient nur der Information und ersetzt nicht den Arzt, der das Dokument angefordert oder unterzeichnet hat.',
+      'Impossibile visualizzare questa immagine.': 'Dieses Bild kann nicht angezeigt werden.',
+      'Appuntamento salvato.': 'Termin gespeichert.',
+      'Agenda Salute': 'Gesundheitskalender',
+      'Nuova visita': 'Neuer Termin',
+      'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.': 'Keine Termine.\nTippe auf „Neuer Termin“, um einen hinzuzufügen.',
+      'Visita': 'Termin',
+      'Inserisci il tipo di visita o lo specialista.': 'Gib die Art des Termins oder den Facharzt ein.',
+      'Visita / specialista': 'Termin / Facharzt',
+      'Es. Dentista': 'Z. B. Zahnarzt',
+      'Salva appuntamento': 'Termin speichern',
+      'Promemoria farmaci': 'Medikamentenerinnerungen',
+      'Aggiungi': 'Hinzufügen',
+      'Nessun promemoria farmaco impostato.': 'Keine Medikamentenerinnerungen eingerichtet.',
+      'Farmaco': 'Medikament',
+      'Modifica': 'Bearbeiten',
+      'Inserisci il nome del farmaco.': 'Gib den Namen des Medikaments ein.',
+      'Modifica promemoria': 'Erinnerung bearbeiten',
+      'Nuovo promemoria': 'Neue Erinnerung',
+      'Farmaco / integratore': 'Medikament / Nahrungsergänzung',
+      'Salva modifiche': 'Änderungen speichern',
+      'Salva e attiva promemoria': 'Speichern und Erinnerung aktivieren',
+      'Impossibile aprire il telefono.': 'Telefon-App kann nicht geöffnet werden.',
+      'Aggiungi contatto sanitario': 'Gesundheitskontakt hinzufügen',
+      'Modifica contatto': 'Kontakt bearbeiten',
+      'Nome': 'Name',
+      'Ruolo / specialità': 'Rolle / Fachgebiet',
+      'Es. Medico di base, Cardiologo': 'Z. B. Hausarzt, Kardiologe',
+      'Telefono': 'Telefon',
+      'Nota (facoltativa)': 'Notiz (optional)',
+      'SALVA': 'SPEICHERN',
+      'Numero unico emergenze': 'Einheitliche Notrufnummer',
+      'Emergenza sanitaria': 'Medizinischer Notfall',
+      'Polizia di Stato': 'Staatspolizei',
+      'Vigili del Fuoco': 'Feuerwehr',
+      'Guardia di Finanza': 'Finanzpolizei',
+      'Telefono Azzurro': 'Telefono Azzurro',
+      'Numeri utili': 'Wichtige Nummern',
+      'Numeri nazionali': 'Nationale Nummern',
+      'I miei contatti sanitari': 'Meine Gesundheitskontakte',
+      'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.': 'Füge deinen Arzt, einen Facharzt, eine Apotheke oder einen anderen vertrauenswürdigen Kontakt hinzu.',
+      'Contatto': 'Kontakt',
+      'Aggiungi contatto': 'Kontakt hinzufügen',
+      'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.': 'Lokale Nummern werden nach offizieller Prüfung für die jeweilige Region ergänzt.',
+      'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.': 'Der Tarif kann in der veröffentlichten Version über Google Play aktiviert werden.',
+      'Piani Salute Risponde': 'SaluteRisponde-Tarife',
+      'Gratis': 'Kostenlos',
+      '3 risposte gratuite': '3 kostenlose Antworten',
+      '1 esame o referto': '1 Untersuchung oder Befund',
+      'Avvisi di sicurezza sempre disponibili': 'Sicherheitshinweise immer verfügbar',
+      'PIANO ATTUALE': 'AKTUELLER TARIF',
+      'Prezzo da definire / mese': 'Preis noch festzulegen / Monat',
+      'Più consultazioni': 'Mehr Anfragen',
+      'Più documenti': 'Mehr Dokumente',
+      'Cronologia': 'Verlauf',
+      'SCEGLI PLUS': 'PLUS WÄHLEN',
+      'Analisi avanzata documenti': 'Erweiterte Dokumentanalyse',
+      'Riepilogo per il medico': 'Zusammenfassung für den Arzt',
+      'Preparazione visita': 'Terminvorbereitung',
+      'Funzioni avanzate': 'Erweiterte Funktionen',
+      'SCEGLI PRO': 'PRO WÄHLEN',
+      'ATTIVO': 'AKTIV',
+      'Modalità TESTER disattivata. Piano FREE ripristinato.': 'TESTER-Modus deaktiviert. FREE-Tarif wiederhergestellt.',
+      'Account Salute Risponde': 'SaluteRisponde-Konto',
+      'ACCEDI': 'ANMELDEN',
+      'ISCRIVITI': 'REGISTRIEREN',
+      'Registrazione non ancora attiva.': 'Die Registrierung ist noch nicht aktiv.',
+      'Accesso non ancora attivo.': 'Die Anmeldung ist noch nicht aktiv.',
+      'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.': 'Sicher. Verlässlich. Menschlich.\nSaluteRisponde bietet Gesundheitsinformationen und Orientierung und ersetzt keinen Arzt. Kontaktiere im Notfall den Rettungsdienst.',
+      'Email': 'E-Mail',
+      'Password': 'Passwort',
+      'PDF, JPG, PNG o WEBP': 'PDF, JPG, PNG oder WEBP',
+      '© 2026 SaluteRisponde': '© 2026 SaluteRisponde',
+    },
+    'pt': {
+      'Automatico · Telefono': 'Automático · Dispositivo',
+      'Modalità collaudo': 'Modo de teste',
+      'Attivare la modalità di collaudo interna con risposte illimitate?': 'Ativar o modo de teste interno com respostas ilimitadas?',
+      'ANNULLA': 'CANCELAR',
+      'ATTIVA TESTER': 'ATIVAR TESTER',
+      'Modalità collaudo attiva: risposte illimitate.': 'Modo de teste ativo: respostas ilimitadas.',
+      'Hai utilizzato le 3 risposte gratuite': 'Utilizou as suas 3 respostas gratuitas',
+      'Per continuare a parlare con Salute Risponde scegli il piano PLUS o PRO.': 'Para continuar a falar com a SaluteRisponde, escolha o plano PLUS ou PRO.',
+      'VEDI PLUS E PRO': 'VER PLUS E PRO',
+      'NON ORA': 'AGORA NÃO',
+      'La foto deve avere una dimensione massima di 10 MB.': 'A fotografia não pode exceder 10 MB.',
+      'L’immagine deve avere una dimensione massima di 10 MB.': 'A imagem não pode exceder 10 MB.',
+      'Non riesco ad accedere al PDF selezionato.': 'Não foi possível aceder ao PDF selecionado.',
+      'Il PDF deve avere una dimensione massima di 10 MB.': 'O PDF não pode exceder 10 MB.',
+      'Allega alla domanda': 'Anexar à pergunta',
+      'Foto, immagine dalla galleria oppure PDF.': 'Fotografia, imagem da galeria ou PDF.',
+      'Scatta una foto': 'Tirar uma fotografia',
+      'Scegli dalla galleria': 'Escolher da galeria',
+      'Allega un PDF': 'Anexar um PDF',
+      'L’allegato non è più disponibile. Selezionalo di nuovo.': 'O anexo já não está disponível. Selecione-o novamente.',
+      'Analizza e spiegami questo allegato sanitario.': 'Analisa e explica este anexo médico.',
+      'Salute Risponde sta rispondendo…': 'A SaluteRisponde está a responder…',
+      'Salute Risponde sta analizzando l’allegato…': 'A SaluteRisponde está a analisar o anexo…',
+      'Salute Risponde sta elaborando la risposta, ancora qualche secondo…': 'A SaluteRisponde está a preparar a resposta, mais alguns segundos…',
+      'Analisi dell’allegato in corso, ancora qualche secondo…': 'Análise do anexo em curso, mais alguns segundos…',
+      'Fai una domanda': 'Fazer uma pergunta',
+      'COLLAUDO • risposte illimitate': 'TESTE • respostas ilimitadas',
+      'Hai terminato le 3 risposte gratuite': 'Utilizou as 3 respostas gratuitas',
+      'Continua con Salute Risponde scegliendo PLUS o PRO.': 'Continue com a SaluteRisponde escolhendo PLUS ou PRO.',
+      'Rimuovi allegato': 'Remover anexo',
+      'Allega foto o PDF': 'Anexar fotografia ou PDF',
+      'Scegli PLUS o PRO per continuare': 'Escolha PLUS ou PRO para continuar',
+      'Scrivi una domanda o allega un esame...': 'Escreva uma pergunta ou anexe um exame/relatório...',
+      'Ciao, sono Salute Risponde. Posso aiutarti a capire meglio sintomi, esami e referti. Non sostituisco il medico.': 'Olá, sou a SaluteRisponde. Posso ajudar a compreender melhor sintomas, exames e relatórios. Não substituo um médico.',
+      'Aggiungi un documento': 'Adicionar um documento',
+      'Fotografa il documento oppure scegli un file già salvato.': 'Fotografe o documento ou escolha um ficheiro já guardado.',
+      'Scegli dalla galleria o dai file': 'Escolher da galeria ou dos ficheiros',
+      'Seleziona prima un documento.': 'Selecione primeiro um documento.',
+      'Documento salvato nel tuo archivio.': 'Documento guardado no seu arquivo.',
+      'Non è stato possibile salvare il documento.': 'Não foi possível guardar o documento.',
+      'Documento': 'Documento',
+      'Il file non è più disponibile sul dispositivo.': 'O ficheiro já não está disponível no dispositivo.',
+      'Non riesco ad aprire questo PDF con le app disponibili.': 'Não foi possível abrir este PDF com as aplicações disponíveis.',
+      'Errore durante l’apertura del documento.': 'Erro ao abrir o documento.',
+      'Analizzare il documento?': 'Analisar o documento?',
+      'Il documento verrà inviato in modo sicuro al servizio di analisi per leggerlo e spiegarlo. Evita di inviare documenti di altre persone senza il loro consenso.': 'O documento será enviado de forma segura para o serviço de análise, para ser lido e explicado. Não envie documentos de outras pessoas sem o respetivo consentimento.',
+      'ANALIZZA': 'ANALISAR',
+      'Non è stato possibile analizzare il documento.': 'Não foi possível analisar o documento.',
+      'Esami e referti': 'Exames e relatórios',
+      'Fotografa o scegli un documento': 'Fotografar ou escolher um documento',
+      'Pronto per essere salvato': 'Pronto para guardar',
+      'Salva nel mio archivio': 'Guardar no meu arquivo',
+      'I miei documenti': 'Os meus documentos',
+      'Nessun documento salvato.': 'Nenhum documento guardado.',
+      'Selezionato • usa Apri per visualizzarlo': 'Selecionado • use Abrir para visualizar',
+      'Tocca per selezionare • usa Apri per visualizzarlo': 'Toque para selecionar • use Abrir para visualizar',
+      'Apri': 'Abrir',
+      'Elimina': 'Eliminar',
+      'Analisi in corso…': 'A analisar…',
+      'Analizza e spiegami': 'Analisar e explicar',
+      'Spiegazione del documento': 'Explicação do documento',
+      'Questa spiegazione è informativa e non sostituisce il medico che ha richiesto o firmato il documento.': 'Esta explicação é informativa e não substitui o médico que pediu ou assinou o documento.',
+      'Impossibile visualizzare questa immagine.': 'Não foi possível apresentar esta imagem.',
+      'Appuntamento salvato.': 'Consulta guardada.',
+      'Agenda Salute': 'Agenda de Saúde',
+      'Nuova visita': 'Nova consulta',
+      'Nessun appuntamento.\nPremi “Nuova visita” per inserirne uno.': 'Sem consultas.\nToque em «Nova consulta» para adicionar uma.',
+      'Visita': 'Consulta',
+      'Inserisci il tipo di visita o lo specialista.': 'Indique o tipo de consulta ou o especialista.',
+      'Visita / specialista': 'Consulta / especialista',
+      'Es. Dentista': 'Ex. Dentista',
+      'Salva appuntamento': 'Guardar consulta',
+      'Promemoria farmaci': 'Lembretes de medicação',
+      'Aggiungi': 'Adicionar',
+      'Nessun promemoria farmaco impostato.': 'Nenhum lembrete de medicação definido.',
+      'Farmaco': 'Medicamento',
+      'Modifica': 'Editar',
+      'Inserisci il nome del farmaco.': 'Introduza o nome do medicamento.',
+      'Modifica promemoria': 'Editar lembrete',
+      'Nuovo promemoria': 'Novo lembrete',
+      'Farmaco / integratore': 'Medicamento / suplemento',
+      'Salva modifiche': 'Guardar alterações',
+      'Salva e attiva promemoria': 'Guardar e ativar lembrete',
+      'Impossibile aprire il telefono.': 'Não foi possível abrir a aplicação Telefone.',
+      'Aggiungi contatto sanitario': 'Adicionar contacto de saúde',
+      'Modifica contatto': 'Editar contacto',
+      'Nome': 'Nome',
+      'Ruolo / specialità': 'Função / especialidade',
+      'Es. Medico di base, Cardiologo': 'Ex. Médico de família, Cardiologista',
+      'Telefono': 'Telefone',
+      'Nota (facoltativa)': 'Nota (opcional)',
+      'SALVA': 'GUARDAR',
+      'Numero unico emergenze': 'Número único de emergência',
+      'Emergenza sanitaria': 'Emergência médica',
+      'Polizia di Stato': 'Polícia do Estado',
+      'Vigili del Fuoco': 'Bombeiros',
+      'Guardia di Finanza': 'Guarda Fiscal',
+      'Telefono Azzurro': 'Telefono Azzurro',
+      'Numeri utili': 'Números úteis',
+      'Numeri nazionali': 'Números nacionais',
+      'I miei contatti sanitari': 'Os meus contactos de saúde',
+      'Aggiungi il tuo medico, uno specialista, una farmacia o un altro contatto di fiducia.': 'Adicione o seu médico, um especialista, uma farmácia ou outro contacto de confiança.',
+      'Contatto': 'Contacto',
+      'Aggiungi contatto': 'Adicionar contacto',
+      'I numeri territoriali verranno inseriti dopo verifica ufficiale per area geografica.': 'Os números locais serão adicionados após verificação oficial por área geográfica.',
+      'Il piano sarà attivabile tramite Google Play nella versione di pubblicazione.': 'O plano poderá ser ativado através do Google Play na versão publicada.',
+      'Piani Salute Risponde': 'Planos SaluteRisponde',
+      'Gratis': 'Grátis',
+      '3 risposte gratuite': '3 respostas gratuitas',
+      '1 esame o referto': '1 exame ou relatório',
+      'Avvisi di sicurezza sempre disponibili': 'Avisos de segurança sempre disponíveis',
+      'PIANO ATTUALE': 'PLANO ATUAL',
+      'Prezzo da definire / mese': 'Preço a definir / mês',
+      'Più consultazioni': 'Mais consultas',
+      'Più documenti': 'Mais documentos',
+      'Cronologia': 'Histórico',
+      'SCEGLI PLUS': 'ESCOLHER PLUS',
+      'Analisi avanzata documenti': 'Análise avançada de documentos',
+      'Riepilogo per il medico': 'Resumo para o médico',
+      'Preparazione visita': 'Preparação da consulta',
+      'Funzioni avanzate': 'Funções avançadas',
+      'SCEGLI PRO': 'ESCOLHER PRO',
+      'ATTIVO': 'ATIVO',
+      'Modalità TESTER disattivata. Piano FREE ripristinato.': 'Modo TESTER desativado. Plano FREE restaurado.',
+      'Account Salute Risponde': 'Conta SaluteRisponde',
+      'ACCEDI': 'ENTRAR',
+      'ISCRIVITI': 'REGISTAR',
+      'Registrazione non ancora attiva.': 'O registo ainda não está ativo.',
+      'Accesso non ancora attivo.': 'O acesso ainda não está ativo.',
+      'Sicuro. Affidabile. Umano.\nSalute Risponde offre informazioni e orientamento sanitario e non sostituisce il medico. In caso di emergenza contatta i servizi sanitari.': 'Seguro. Fiável. Humano.\nA SaluteRisponde fornece informação e orientação de saúde e não substitui um médico. Em caso de emergência, contacte os serviços de emergência.',
+      'Email': 'Email',
+      'Password': 'Palavra-passe',
+      'PDF, JPG, PNG o WEBP': 'PDF, JPG, PNG ou WEBP',
+      '© 2026 SaluteRisponde': '© 2026 SaluteRisponde',
     },
   };
 
   static Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString(_prefsKey);
-
     if (saved != null && options.any((option) => option.code == saved)) {
       notifier.value = saved;
     } else {
@@ -333,15 +1079,12 @@ class LanguageService {
   }
 
   static String _deviceLanguageCode() {
-    final code =
-        ui.PlatformDispatcher.instance.locale.languageCode.toLowerCase();
+    final code = ui.PlatformDispatcher.instance.locale.languageCode.toLowerCase();
     const supported = {'it', 'en', 'es', 'fr', 'de', 'pt'};
     return supported.contains(code) ? code : 'it';
   }
 
   static String get selectedCode => notifier.value;
-
-  // Codice effettivo: in Automatico segue il telefono.
   static String get currentCode =>
       notifier.value == automaticCode ? _deviceLanguageCode() : notifier.value;
 
@@ -364,5 +1107,158 @@ class LanguageService {
   static String t(String key) {
     final selected = _strings[currentCode] ?? _strings['it']!;
     return selected[key] ?? _strings['it']![key] ?? key;
+  }
+
+  static String uiText(String italianSource) {
+    final selected = _ui[currentCode] ?? _ui['it']!;
+    return selected[italianSource] ?? italianSource;
+  }
+
+  static String optionName(LanguageOption option) {
+    if (option.code == automaticCode) {
+      return uiText('Automatico · Telefono');
+    }
+    return option.nativeName;
+  }
+
+  static String freeRemaining(int remaining) {
+    switch (currentCode) {
+      case 'en':
+        return remaining == 1
+            ? 'FREE plan • 1 answer left'
+            : 'FREE plan • $remaining answers left';
+      case 'es':
+        return remaining == 1
+            ? 'Plan FREE • queda 1 respuesta'
+            : 'Plan FREE • quedan $remaining respuestas';
+      case 'fr':
+        return remaining == 1
+            ? 'Formule FREE • 1 réponse restante'
+            : 'Formule FREE • $remaining réponses restantes';
+      case 'de':
+        return remaining == 1
+            ? 'FREE-Tarif • 1 Antwort übrig'
+            : 'FREE-Tarif • $remaining Antworten übrig';
+      case 'pt':
+        return remaining == 1
+            ? 'Plano FREE • resta 1 resposta'
+            : 'Plano FREE • restam $remaining respostas';
+      default:
+        return remaining == 1
+            ? 'Piano FREE • 1 risposta rimasta'
+            : 'Piano FREE • $remaining risposte rimaste';
+    }
+  }
+
+  static String freeLimitReached() {
+    switch (currentCode) {
+      case 'en': return 'FREE plan • free limit reached';
+      case 'es': return 'Plan FREE • límite gratuito alcanzado';
+      case 'fr': return 'Formule FREE • limite gratuite atteinte';
+      case 'de': return 'FREE-Tarif • kostenloses Limit erreicht';
+      case 'pt': return 'Plano FREE • limite gratuito atingido';
+      default: return 'Piano FREE • limite gratuito raggiunto';
+    }
+  }
+
+  static String everyDayAt(String time) {
+    switch (currentCode) {
+      case 'en': return 'Every day at $time';
+      case 'es': return 'Todos los días a las $time';
+      case 'fr': return 'Tous les jours à $time';
+      case 'de': return 'Jeden Tag um $time';
+      case 'pt': return 'Todos os dias às $time';
+      default: return 'Ogni giorno alle $time';
+    }
+  }
+
+  static String planDialogTitle(String plan) {
+    switch (currentCode) {
+      case 'en': return '$plan plan';
+      case 'es': return 'Plan $plan';
+      case 'fr': return 'Formule $plan';
+      case 'de': return '$plan-Tarif';
+      case 'pt': return 'Plano $plan';
+      default: return 'Piano $plan';
+    }
+  }
+
+  static String appError(String type) {
+    switch (currentCode) {
+      case 'en': return 'SaluteRisponde app error: $type. Try again.';
+      case 'es': return 'Error de la app SaluteRisponde: $type. Inténtalo de nuevo.';
+      case 'fr': return 'Erreur de l’application SaluteRisponde : $type. Réessayez.';
+      case 'de': return 'SaluteRisponde-App-Fehler: $type. Versuche es erneut.';
+      case 'pt': return 'Erro da aplicação SaluteRisponde: $type. Tente novamente.';
+      default: return 'Errore app Salute Risponde: $type. Riprova.';
+    }
+  }
+
+  static String appointmentTomorrowBody(String title) {
+    switch (currentCode) {
+      case 'en': return '$title is scheduled for tomorrow.';
+      case 'es': return '$title está programada para mañana.';
+      case 'fr': return '$title est prévu pour demain.';
+      case 'de': return '$title ist für morgen geplant.';
+      case 'pt': return '$title está marcada para amanhã.';
+      default: return '$title è programmata per domani.';
+    }
+  }
+
+  static String get appointmentTomorrowTitle {
+    switch (currentCode) {
+      case 'en': return 'Appointment tomorrow';
+      case 'es': return 'Cita mañana';
+      case 'fr': return 'Rendez-vous demain';
+      case 'de': return 'Termin morgen';
+      case 'pt': return 'Consulta amanhã';
+      default: return 'Visita domani';
+    }
+  }
+
+  static String get medicineTimeTitle {
+    switch (currentCode) {
+      case 'en': return 'Time to take your medicine';
+      case 'es': return 'Es hora de tomar el medicamento';
+      case 'fr': return 'Il est temps de prendre le médicament';
+      case 'de': return 'Zeit, das Medikament einzunehmen';
+      case 'pt': return 'Está na hora de tomar o medicamento';
+      default: return 'È ora di prendere il farmaco';
+    }
+  }
+
+  static String get visitsChannelName {
+    switch (currentCode) {
+      case 'en': return 'Appointments and visits';
+      case 'es': return 'Citas y visitas';
+      case 'fr': return 'Rendez-vous et consultations';
+      case 'de': return 'Termine und Untersuchungen';
+      case 'pt': return 'Consultas e compromissos';
+      default: return 'Visite e appuntamenti';
+    }
+  }
+
+  static String get visitsChannelDescription {
+    switch (currentCode) {
+      case 'en': return 'Scheduled appointment reminders';
+      case 'es': return 'Recordatorios de citas programadas';
+      case 'fr': return 'Rappels des rendez-vous programmés';
+      case 'de': return 'Erinnerungen an geplante Termine';
+      case 'pt': return 'Lembretes de consultas agendadas';
+      default: return 'Promemoria delle visite programmate';
+    }
+  }
+
+  static String get medicinesChannelName => uiText('Promemoria farmaci');
+
+  static String get medicinesChannelDescription {
+    switch (currentCode) {
+      case 'en': return 'Daily medicine reminders';
+      case 'es': return 'Avisos diarios de medicación';
+      case 'fr': return 'Rappels quotidiens de médicaments';
+      case 'de': return 'Tägliche Medikamentenerinnerungen';
+      case 'pt': return 'Avisos diários de medicação';
+      default: return 'Avvisi giornalieri per i farmaci';
+    }
   }
 }
