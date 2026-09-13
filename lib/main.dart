@@ -2257,7 +2257,7 @@ class UsefulNumbersPage extends StatefulWidget {
 }
 
 class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
-  static _contactsKey = 'salute_risponde_personal_health_contacts';
+  static const String _contactsKey = 'salute_risponde_personal_health_contacts';
   List<Map<String, String>> _contacts = [];
 
   @override
@@ -2380,7 +2380,7 @@ class _UsefulNumbersPageState extends State<UsefulNumbersPage> {
 
   @override
   Widget build(BuildContext context) {
-    numbers = [
+    final numbers = [
       (LanguageService.uiText('Numero unico emergenze'), '112'),
       (LanguageService.uiText('Emergenza sanitaria'), '118'),
       (LanguageService.uiText('Polizia di Stato'), '113'),
